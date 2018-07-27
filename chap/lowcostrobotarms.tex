@@ -69,7 +69,7 @@ For this lab, the students were tasked with altering the robot to include a micr
 
 \section{Lab 3: Closed-loop control with Potentiometer sensors}
 
-For this lab, the students were tasked with altering the robot further to include potentiometers to read its joint values and thus implement closed loop control with forward kinematics. The students were provided with instructions on how to attach the potentiometers to the robot with some custom designed 3D printed parts and lasercut gears. The aim of this lab was to help students understand the importance of implementing feedback in robotics control systems, and to  a certain extent, introduce them to fabrication and design. \begin{figure}
+For this lab, the students were tasked with altering the robot further to include potentiometers to read its joint values and thus implement closed loop control with forward kinematics. The students were provided with instructions on how to attach the potentiometers to the robot with some custom designed 3D printed parts and lasercut gears. The aim of this lab was to help students understand the importance of implementing feedback in robotics control systems, and to a certain extent, introduce them to fabrication and design. \begin{figure}
 \centering
 {\begin{overpic}[width =0.225\columnwidth]{Part1.jpg}\end{overpic}}
 {\begin{overpic}[width =0.225\columnwidth]{Aug1.jpg}\end{overpic}}
@@ -93,7 +93,7 @@ For this lab, the students were tasked with altering the robot further to includ
 {\begin{overpic}[width =0.3\columnwidth]{Augment2.jpg}\end{overpic}}
 {\begin{overpic}[width =0.3\columnwidth]{Augment3.jpg}\end{overpic}}
 
-\caption{\label{fig:Assembly1}{The Augmented Robotic arm}}
+\caption{\label{fig:Assembly1}{The Augmented robotic arm}}
 \end{figure}
 %describe the lab, explain what worked well
 
@@ -103,41 +103,71 @@ For this lab, the students were tasked with using camera inputs to control the r
 
 
 %describe the lab, explain what worked well
+\section {GUI}
+	For the main introdution to robotics class, the students are assumed to know the basics of programming. For those without the skill, and for situations in which the robotic arm is to be used for outreach opportunities, a graphical user interface (GUI) was also developed for the arm. Fig \ref{gui_1} shows the default view of the GUI. It includes a preview screen on the left, and several tabs on the right for setup information, virtual controls, and automation..
+
+\begin{figure}
+\centering
+{\begin{overpic}[width =0.7\columnwidth]{GUI1.png}\end{overpic}}
+{\begin{overpic}[width =0.1\columnwidth]{GUI1_1.png}\end{overpic}}
+\caption{\label{gui_1}{The Graphical user interface, and the virtual remote control. To allow ease of access, the virtual remote is accessible from all tabs in the GUI, and can be used after the arduino Input/Output pins have been set }}
+\end{figure}
+
+\subsection {Configuration}
+	 In order to fully utilize the GUI, the user is first tasked with inputing a series of arduino pin values that describe what the microprocessor's inputs and outputs as show in Fig \ref{gui_2}. After setting up the pin information, the user gains use of the virtual remote control of the GUI.  Following this setup, they are then tasked with calibrating the robot's potentiometer values by setting the arm to its various limits and recording the sensor values. Fig \ref{gui_3} shows some examples of the limits used for configuration. Once the configuration of all five joints are complete, the user then has the option to save the calibration settings, allowing the same robot arm to be used across different computers without recalibration. Configuration also allow the user see a preview of the robot arm in the preview pane. This allows them to easily move the arm using sliders provided by the main display tab. 
+
+\begin{figure}
+\centering
+{\begin{overpic}[width =0.4\columnwidth]{GUI2.png}\end{overpic}}
+\caption{\label{gui_2}{The setup tab of the User interface. The program takes the user through the steps required to configure the Input/Output pins, and calibrate the robot's potentiometers}}
+\end{figure}
+
+\begin{figure}
+\centering
+{\begin{overpic}[width =0.45\columnwidth]{GUI3.png}\end{overpic}}
+{\begin{overpic}[width =0.45\columnwidth]{GUI3_1.png}\end{overpic}}
+\caption{\label{gui_3}{Limits used for calibrating the robot's sensors. By moving the robot to the known extremes of its joints, any value withing the limits can be achieved with a simple mapping calculation}}
+\end{figure}
+
+\subsection {Automation}
+	Since the main intent of the GUI was to help students with little to no programming experience, the GUI includes an automation tab. The student  simply moves the robot arm to a configuration with the virtual or physical remote---switching between physical and virtual control requires moving a manual switch---and then saves each Configuration. Fig \ref{gui_4} shows a saved chain of 11 different configurations. The user then has the option of previewing their created movement path and sending it to the robot arm. Using this system, users can share movement paths between themselves, since the configurations work independently of calibrations. This means that a given pair of robot arms that are accurately calibrated can run the same movement file without issues. This system also allows a user to program movement paths for the robot without having one physically attached. Since the configurations are saved from the configuration of the robot in the preview pane, the display tab sliders can be used to move the preview around, and its configuration can be saved that way.
+
+\begin{figure}
+\centering
+{\begin{overpic}[width =0.35\columnwidth]{GUI4.png}\end{overpic}}
+\caption{\label{gui_4}{The Automation tab of the GUI. The buttons on this tab help the user program different movement paths. }}
+\end{figure}
+
 
 \section{Pre-semester prep}
  
 Before the semester begins, the acrylic gears (\url{https://github.com/BIsichei/OWI-GUI/tree/master/PotHolders/Cut}) are cut, the 3D printed parts (\url{https://github.com/BIsichei/OWI-GUI/tree/master/PotHolders/Print}) are made, and the following parts are ordered: 
 \begin{enumerate}
-\item 6 x Spacers \url{http://a.co/dOhwODm } 
-\item 12 x Bolts \url{http://a.co/1IOLdLH } 
-\item 1 x Push Button Switch \url{http://a.co/5Wwy4IX } 
-\item 1 x Custom PCB \url{https://oshpark.com/shared_projects/iEyo6nkB}
-\item 1 x Hex Inverter \url{https://www.digikey.com/products/en?keywords=296-1566-5-ND}
-\item 1 x 14 pin IC Socket \url{https://www.digikey.com/products/en?keywords=ED3045-5-ND}
-\item 1 x (2 x4) Shunt \url{https://www.digikey.com/products/en?keywords=sam9108-nd}  (all connections need to be soldered together to form a switch)
-\item 1 x Dual Straight Female Headers (2x6) \url{https://www.pololu.com/product/1026}
-\item 1 x Dual Straight Male Headers (2x40) \url{https://www.pololu.com/product/966}
-\item 1 x Jumper wire kit (40 M/F, 40 M/M, 40 F/F) \url{http://a.co/hCFAGPP}
+\item 6 x Spacers \url{http://a.co/dOhwODm } (50 for \$12)
+\item 12 x Bolts \url{http://a.co/1IOLdLH }  (60 for \$6)
+\item 1 x Push Button Switch \url{http://a.co/5Wwy4IX } (100 for \$7)
+\item 1 x Custom PCB \url{https://oshpark.com/shared_projects/iEyo6nkB}  (3 for \$13)
+\item 1 x Hex Inverter \url{https://www.digikey.com/products/en?keywords=296-1566-5-ND} (10 for \$46)
+\item 1 x 14 pin IC Socket \url{https://www.digikey.com/products/en?keywords=ED3045-5-ND} (10 for \$18)
+\item 1 x (2 x4) Shunt \url{https://www.digikey.com/products/en?keywords=sam9108-nd}  (all connections need to be soldered together to form a switch) (10 for \$17)
+\item 1 x Dual Straight Female Headers (2x6) \url{https://www.pololu.com/product/1026} (10 for \$7)
+\item 1 x Dual Straight Male Headers (2x40) \url{https://www.pololu.com/product/966} (25 for \$30)
+\item 1 x Jumper wire kit (40 M/F, 40 M/M, 40 F/F) \url{http://a.co/hCFAGPP} (\$7)
 \end{enumerate}
 The quantities indicated are the amounts needed for each student. 
 
-The Students are expected to purchase:
+The students are expected to purchase:
 \begin{enumerate}
-\item 1 x OWI Robot Arm kit \url{http://a.co/7EPgoxR}
-\item 1 x Arduino Mega \url{http://a.co/acu1G9b}
-\item 3 x L298 Motor Drivers \url{http://a.co/3N7bQEp}
-\item 5 x Rotary Potentiometers \url{http://a.co/aE2m0tu}
-\item 1 x Any simple Lightweight webcam \url{http://a.co/hAqZq3J}
+\item 1 x OWI Robot Arm kit \url{http://a.co/7EPgoxR} (\$38)
+\item 1 x Arduino Mega \url{http://a.co/acu1G9b} (\$15)
+\item 3 x L298 Motor Drivers \url{http://a.co/3N7bQEp} (5 for \$15)
+\item 5 x Rotary Potentiometers \url{http://a.co/aE2m0tu} (10 for \$11)
+\item 1 x Any simple lightweight webcam \url{http://a.co/hAqZq3J} (\$14)
 \end{enumerate}
-
-\section {GUI}
-
-
 
 %What materials need to be ordered?  What needs to be set up?
 
-
 \section{Results}
 
-At the end of the labs, the students leave the class with experience constructing and programming a robot arm. In the course of doing this, they learn robotics terminology, and have an idea about different means of controling robots and implementing sensor feedback. 
+At the end of the labs, the students leave the class with experience constructing and programming a robot arm. In the course of doing this, they learn robotics terminology, and have an idea about different means of controling robots and implementing sensory feedback. 
 %explain the outcome of the labs
