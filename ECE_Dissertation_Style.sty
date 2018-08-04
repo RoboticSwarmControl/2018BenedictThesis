@@ -1,4 +1,3 @@
-
 \@ifundefined{chapter}{\@latexerr{The `UHdissertatin' option should be used
 with the `report' document style}{You should probably read the
 documentation.}}{}
@@ -13,8 +12,8 @@ documentation.}}{}
 % Set the margins of page ( 8.5 x 11 inch page )
 %
 \pagestyle{plain}
-\oddsidemargin 1in   %  Note that \oddsidemargin = \evensidemargin
-%\evensidemargin .0in  %  Left Margin
+\oddsidemargin 1 in   %  Note that \oddsidemargin = \evensidemargin
+%\evensidemargin 1 in  %  Left Margin
 % Theses are single-sided, so we don't care about \evensidemargin
 \textheight  9.0in    %  Height of text (including footnotes and figures,
                       %  excluding running head and foot).
@@ -208,7 +207,7 @@ documentation.}}{}
 	\vfill
 	\begin{tabbing}
 		\hspace{1.6in}\= \hspace{1.2in}\= \kill
-		Approved:\>\>\rule{3.0in}{.015in}\+\+ \\
+		Approved:\>\>\rule{3.75in}{.015in}\+\+ \\
 		Chair of the Committee \
 		\@advisor
 	\end{tabbing} \vspace {0.18in}
@@ -216,14 +215,14 @@ documentation.}}{}
 	\begin{tabbing}
 		\hspace{1.6in}\= \hspace{1.2in}\= \kill
 
-		Committee Members:\>\>\rule{3.0in}{.015in}\+\+ \
+		Committee Members:\>\>\rule{3.75in}{.015in}\+\+ \
 		\@firstreader \\
 	\end{tabbing}	
     %\vskip 0.05in
 	\vfill
 	\begin{tabbing}
 		\hspace{1.6in}\= \hspace{1.2in}\= \kill
-		\>\>\rule{3.0in}{.015in}\+\+ \
+		\>\>\rule{3.75in}{.015in}\+\+ \
 		\@secondreader \\
 	\end{tabbing}
 	%\vskip 0.05in
@@ -231,7 +230,7 @@ documentation.}}{}
 	\begin{tabbing}
 		\hspace{1.6in}\= \hspace{1.2in}\= \kill
  \ifx\@empty\@thirdreader \relax \else
-		\>\>\rule{3.0in}{.015in}\+\+\
+		\>\>\rule{3.75in}{.015in}\+\+\
 		\@thirdreader \\
 \fi
 	\end{tabbing}
@@ -240,7 +239,7 @@ documentation.}}{}
 	\begin{tabbing}
 		\hspace{1.6in}\= \hspace{1.2in}\= \kill
  \ifx\@empty\@fourthreader \relax \else
-        \>\>\rule{3.0in}{.015in}\+\+\
+        \>\>\rule{3.75in}{.015in}\+\+\
 		\@fourthreader \\
 \fi
 	\end{tabbing}
@@ -330,7 +329,8 @@ documentation.}}{}
     \listoffigures
     \clearpage
     \addcontentsline{toc}{chapter}{List of Tables}
-    \listoftables}
+    \listoftables
+}
 
 
 \def\prefacesection{\newpage
@@ -342,4 +342,3 @@ documentation.}}{}
     \newpage}   
 
 \makeatother
-

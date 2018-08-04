@@ -2,9 +2,9 @@
 
 
 
-\chapter[A Magnetic Manipulator Cooled With Liquid Nitrogen]{A Magnetic Manipulator Cooled With Liquid Nitrogen}\label{chap-cryoMagnet}
+\chapter[Cryogenic Manipulation System]{Cryogenic Manipulation System}\label{chap-cryoMagnet}
 
-This chapter is based on a Journal paper with Julien Leclerc, Benedict Isichei, and Aaron T. Becker.  My contribution was in the design of the heating elements interfacing the Manipulator and the robotic workspace, creating a camera mount for the system's sensory feedback, and working on the object tracking. 
+This chapter is based on a Journal paper with Julien Leclerc, Benedict Isichei, and Aaron T. Becker.  The author's contribution was in the design of the heating elements interfacing the Manipulator and the robotic workspace, creating a camera mount for the system's sensory feedback, and working on the object tracking. 
 Nathan Hui aided with editing the final version of the paper.
 
 
@@ -150,11 +150,12 @@ Two components are present in this equation:
 \item The term $R(t)\cdot I(t)$ is associated with Joule losses. It is an undesirable term for two reasons. First, it causes the coil to heat and decreases the energy efficiency of the system. Secondly, power supplies are limited by their maximum voltage. The voltage across the coil is shared between the two terms of equation \ref{Ul}. If the term $R(t)\cdot~I(t)$ is increased, less voltage is available for the term $L\cdot \d I(t)/ \d t$. LN2 cooling allows reducing the value of $R(t)$ by 87\%;
 \end{itemize}
 %As shown in subsection \ref{Forward}, the force produced on a permanent magnet is proportional to the magnetic flux density. However, 
-The magnetic flux $\Phi$ produced by a solenoid is proportional to its inductance as shown in \eqref{flux}. In \cite{kummer2010octomag}, the authors use a ferromagnetic core to increase the value of $L$ and therefore increase the amount of force generated. LN2 cooling is different and increases the generated field by increasing the value of $I(t)$.
+The magnetic flux $\Phi$ produced by a solenoid is proportional to its inductance as shown in 
 \begin{equation}
-\Phi (t)=L\cdot I(t)
+\Phi (t)=L\cdot I(t).
 \label{flux}
 \end{equation}
+ In \cite{kummer2010octomag}, the authors use a ferromagnetic core to increase the value of $L$ and therefore increase the amount of force generated. LN2 cooling is different and increases the generated field by increasing the value of $I(t)$.
   It is technically difficult to scale up magnetic manipulators \cite{kummer2010octomag}. 
   Air-cooled human-size manipulators would use comparitively large electromagnets to produce the magnetic field.
   This technical challenge could potentially be solved using LN2 cooling.  
@@ -260,7 +261,7 @@ $} \\
  &~~\scalebox{.7}{$=
   \frac{J \mu _0   F_{\textrm{Fill}}}{8}\left((T_z+2 Z_e) \left(\sqrt{4 R_e^2+(T_z+2 Z_e)^2}-\sqrt{4 (R_e-T_r)^2+(T_z+2 Z_e)^2}\right) \right. 
   $}  \nonumber \\
-  & \qquad ~~~ \scalebox{.7}{$\left.+(T_z-2 Z_e) \left(\sqrt{4 R_e^2+(T_z-2 Z_e)^2}-\sqrt{4 (R_e-T_r)^2+(T_z-2 Z_e)^2}\right)\right)$} \nonumber
+  & \qquad ~~~ \scalebox{.7}{$\left.+(T_z-2 Z_e) \left(\sqrt{4 R_e^2+(T_z-2 Z_e)^2}-\sqrt{4 (R_e-T_r)^2+(T_z-2 Z_e)^2}\right)\right)$} \nonumber,
 \label{Be}
 \end{align}
 %
@@ -268,7 +269,7 @@ where $R_e$ is the external radius of the coil, $Z_e$ is the distance along the 
  The quantity $J\cdot F_{\textrm{Fill}} $ is the current density averaged over the winding $T_z \times T_r$ cross section.
   The magnetic gradient $G_e$ is calculated by the derivative of this equation with respect to $Z_e$:
 \begin{equation}
-G_e=\frac{\d B_e}{\d Z_e}
+G_e=\frac{\d B_e}{\d Z_e}.
 \label{Ge}
 \end{equation}
 
@@ -325,7 +326,7 @@ This section analyzes 3D manipulation of a single robot having a magnetization $
 To simplify analysis, we first solve the \emph{forward problem} which computes the force and flux density or force and torque using the coil currents. 
 
 The system has six EMs, numerated from 1 to 6.
-The magnetic flux density $B_{k(\mathbf{P})}$ produced by EM number $k$ at location $\mathbf{P}$ can be calculated using eq. \ref{FieldEq} where $I_k$ is the current in the magnet and $\mathbf{B}_{k(\mathbf{P})}$ is a function that depends on the geometry of the system and the position of the magnet. The function $\mathbf{B}_{k(\mathbf{P})}$ is computed assuming that the coils are equivalent to current loops. The flux density produced by a current loop is calculated using the semi-analytical equations presented in \cite{simpson2001simple}.
+The magnetic flux density $B_{k(\mathbf{P})}$ produced by EM number $k$ at location $\mathbf{P}$ can be calculated using 
 %
 \begin{equation}
 \mathbf{B}_{k(\mathbf{P})}=\begin{bmatrix}
@@ -342,38 +343,41 @@ B_{kz}
 \\ 
 {\widetilde{B}}_{kz(\mathbf{P})}
 
-\end{bmatrix}\cdot I_k
+\end{bmatrix}\cdot I_k,
 \label{FieldEq}
 \end{equation}
 %
-The flux density produced by the complete system can be computed by summing the field produced by each magnet (see eq.~\ref{FieldTot}) where $\mathbf{I}$ is a vector containing the current of each coil.
+ where $I_k$ is the current in the magnet and $\mathbf{B}_{k(\mathbf{P})}$ is a function that depends on the geometry of the system and the position of the magnet. The function $\mathbf{B}_{k(\mathbf{P})}$ is computed assuming that the coils are equivalent to current loops. The flux density produced by a current loop is calculated using the semi-analytical equations presented in \cite{simpson2001simple}.
+The flux density produced by the complete system, $\mathbf{B}_{(\mathbf{P})}$, can be computed by summing the field produced by each magnet as
 %
 \begin{dmath}
-\mathbf{B}_{(\mathbf{P})}= \scalebox{.8}{$\left(\mathbf{\widetilde{B}}_{1(\mathbf{P})}+\mathbf{\widetilde{B}}_{2(\mathbf{P})}+\mathbf{\widetilde{B}}_{3(\mathbf{P})}+\mathbf{\widetilde{B}}_{4(\mathbf{P})}+\mathbf{\widetilde{B}}_{5(\mathbf{P})}+\mathbf{\widetilde{B}}_{6(\mathbf{P})}\right )\mathbf{I} $}
+\mathbf{B}_{(\mathbf{P})}= \scalebox{.8}{$\left(\mathbf{\widetilde{B}}_{1(\mathbf{P})}+\mathbf{\widetilde{B}}_{2(\mathbf{P})}+\mathbf{\widetilde{B}}_{3(\mathbf{P})}+\mathbf{\widetilde{B}}_{4(\mathbf{P})}+\mathbf{\widetilde{B}}_{5(\mathbf{P})}+\mathbf{\widetilde{B}}_{6(\mathbf{P})}\right )\mathbf{I} $},
 \label{FieldTot}
 \end{dmath}
 %
+ where $\mathbf{I}$ is a vector containing the current of each coil.
+
 It is now necessary to define three new vectors:
 %
 \begin{align}
 \mathbf{\widetilde{B}}_{x(\mathbf{P})}&= \scalebox{.85}{$\setlength\arraycolsep{2pt} \begin{bmatrix}
 \widetilde{B}_{1x(\mathbf{P})} & \widetilde{B}_{2x(\mathbf{P})} & \widetilde{B}_{3x(\mathbf{P})} & \widetilde{B}_{4x(\mathbf{P})} & \widetilde{B}_{5x(\mathbf{P})} & \widetilde{B}_{6x(\mathbf{P})}
-\end{bmatrix}$}
+\end{bmatrix}$},
 \label{Gx} \\
 %
 \mathbf{\widetilde{B}}_{y(\mathbf{P})}&= \scalebox{.85}{$\setlength\arraycolsep{2pt}
 \begin{bmatrix}
 \widetilde{B}_{1y(\mathbf{P})} & \widetilde{B}_{2y(\mathbf{P})} & \widetilde{B}_{3y(\mathbf{P})} & \widetilde{B}_{4y(\mathbf{P})} & \widetilde{B}_{5y(\mathbf{P})} & \widetilde{B}_{6y(\mathbf{P})}
-\end{bmatrix}$}
+\end{bmatrix}$}, and
 \label{Gy} \\
 %
 \mathbf{\widetilde{B}}_{z(\mathbf{P})}&= \scalebox{.85}{$\setlength\arraycolsep{2pt} \begin{bmatrix}
 \widetilde{B}_{1z(\mathbf{P})} & \widetilde{B}_{2z(\mathbf{P})} & \widetilde{B}_{3z(\mathbf{P})} & \widetilde{B}_{4z(\mathbf{P})} & \widetilde{B}_{5z(\mathbf{P})} & \widetilde{B}_{6z(\mathbf{P})}
-\end{bmatrix}$}
+\end{bmatrix}$}.
 \label{Gz}
 \end{align}
 %
-Equation \ref{FieldTot} can be re-written as follows:
+Equation \ref{FieldTot} can be re-written as
 \begin{equation}
 \mathbf{B}_{(\mathbf{P})}=\begin{bmatrix}
 \mathbf{\widetilde{B}}_{x(\mathbf{P})}
@@ -381,7 +385,7 @@ Equation \ref{FieldTot} can be re-written as follows:
 \mathbf{\widetilde{B}}_{y(\mathbf{P})}
 \\ 
 \mathbf{\widetilde{B}}_{z(\mathbf{P})}
-\end{bmatrix}\cdot\mathbf{I}
+\end{bmatrix}\cdot\mathbf{I}.
 \end{equation}
 %
 The force $\mathbf{F}$ is calculated with:
@@ -407,7 +411,7 @@ m_x\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{x(\mathbf{P})}}}{\partial x}+m
 m_x\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{x(\mathbf{P})}}}{\partial y}+m_y\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{y(\mathbf{P})}}}{\partial y}+m_z\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{z(\mathbf{P})}}}{\partial y}
 \\ 
 m_x\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{x(\mathbf{P})}}}{\partial z}+m_y\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{y(\mathbf{P})}}}{\partial z}+m_z\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{z(\mathbf{P})}}}{\partial z}
-\end{bmatrix}\cdot\mathbf{I}
+\end{bmatrix}\cdot\mathbf{I}.
 \end{equation}
 %
 The torque $\mathbf{T}$ is calculated with:
@@ -420,11 +424,11 @@ T_{y(\mathbf{P})}
 \\ 
 T_{z(\mathbf{P})}
 \end{bmatrix}
-=\mathbf{m}\times\mathbf{B}
+=\mathbf{m}\times\mathbf{B},
 \label{Torque}
 \end{equation}
 %
-which can be re-written as:
+which can be re-written as
 %
 \begin{equation}
 \mathbf{T}=\begin{bmatrix}
@@ -433,7 +437,7 @@ m_y\cdot \mathbf{\widetilde{B}}_{z(\mathbf{P})}-m_z\cdot \mathbf{\widetilde{B}}_
 m_z\cdot \mathbf{\widetilde{B}}_{x(\mathbf{P})}-m_x\cdot \mathbf{\widetilde{B}}_{z(\mathbf{P})}
 \\ 
 m_x\cdot \mathbf{\widetilde{B}}_{y(\mathbf{P})}-m_y\cdot \mathbf{\widetilde{B}}_{x(\mathbf{P})}
-\end{bmatrix}\cdot \mathbf{I}
+\end{bmatrix}\cdot \mathbf{I}.
 \label{TorqueMatrix}
 \end{equation}
 
@@ -453,7 +457,7 @@ m_x\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{x(\mathbf{P})}}}{\partial x}+m
 m_x\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{x(\mathbf{P})}}}{\partial y}+m_y\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{y(\mathbf{P})}}}{\partial y}+m_z\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{z(\mathbf{P})}}}{\partial y}
 \\ 
 m_x\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{x(\mathbf{P})}}}{\partial z}+m_y\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{y(\mathbf{P})}}}{\partial z}+m_z\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{z(\mathbf{P})}}}{\partial z}
-\end{bmatrix}
+\end{bmatrix}.
 \end{equation}
 %
 The force and flux density are equal to:
@@ -463,7 +467,7 @@ The force and flux density are equal to:
 \mathbf{B}
 \\ 
 \mathbf{F}
-\end{bmatrix}=\mathbf{A_0}\cdot\mathbf{I}
+\end{bmatrix}=\mathbf{A_0}\cdot\mathbf{I}.
 \end{equation}
 $\mathbf{A_0}$ is a square matrix and can be inverted provided that it is not singular. The current $\mathbf{I}$ is calculated with:
 %
@@ -472,7 +476,7 @@ $\mathbf{A_0}$ is a square matrix and can be inverted provided that it is not si
 \mathbf{B}
 \\ 
 \mathbf{F}
-\end{bmatrix}
+\end{bmatrix}.
 \end{equation}
 %
 The second method controls the force and torque applied on the robot using the actuation matrix $\mathbf{A_1}$
@@ -490,7 +494,7 @@ m_x\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{x(\mathbf{P})}}}{\partial x}+m
 m_x\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{x(\mathbf{P})}}}{\partial y}+m_y\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{y(\mathbf{P})}}}{\partial y}+m_z\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{z(\mathbf{P})}}}{\partial y}
 \\ 
 m_x\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{x(\mathbf{P})}}}{\partial z}+m_y\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{y(\mathbf{P})}}}{\partial z}+m_z\cdot\frac{{\partial {\mathbf{\widetilde{B}}}_{z(\mathbf{P})}}}{\partial z}
-\end{bmatrix}
+\end{bmatrix}.
 \label{A1}
 \end{equation}
 
@@ -502,7 +506,7 @@ The torque and force are equal to:
 \mathbf{T}
 \\ 
 \mathbf{F}
-\end{bmatrix}=\mathbf{A_1}\cdot\mathbf{I}
+\end{bmatrix}=\mathbf{A_1}\cdot\mathbf{I}.
 \end{equation}
 $\mathbf{A_1}$ is a square matrix and can be inverted provided that it is not singular. The current $\mathbf{I}$ is calculated with:
 \begin{equation}
@@ -510,7 +514,7 @@ $\mathbf{A_1}$ is a square matrix and can be inverted provided that it is not si
 \mathbf{T}
 \\ 
 \mathbf{F}
-\end{bmatrix}
+\end{bmatrix}.
 \label{FullEq3}
 \end{equation}
 
@@ -557,7 +561,7 @@ As explained in \S\ref{sec:TrajectoryControl}, the orientation of the robot can 
  The first one uses actuation matrix $\mathbf{A_0}$ and allows applying a desired flux density vector $\mathbf{B}$ and a force $\mathbf{F}$ to the robot. 
  The second uses actuation matrix $\mathbf{A_1}$ and allows applying a desired torque $\mathbf{T}$ and a force $\mathbf{F}$ to the robot.
 
-When expressed in the manipulator coordinate system ($x,y,z$), $\mathbf{A_1}$ is square. However, the robot is symmetric around its revolution axis $d$ and therefore no torque can be applied on the $d$ axis. Defining a new coordinate system ($d,q,w$) allows removing one dimension from $\mathbf{A_1}$ (i.e. $\mathbf{A_1}$ has a size 5$\times$6 when expressed in the ($d,q,w$) coordinate system). The system is therefore underdetermined and the least square solution is calculated using eq. \ref{LS}.
+When expressed in the manipulator coordinate system ($x,y,z$), $\mathbf{A_1}$ is square. However, the robot is symmetric around its revolution axis $d$ and therefore no torque can be applied on the $d$ axis. Defining a new coordinate system ($d,q,w$) allows removing one dimension from $\mathbf{A_1}$ (i.e. $\mathbf{A_1}$ has a size 5$\times$6 when expressed in the ($d,q,w$) coordinate system). The system is therefore underdetermined and the least square solution is calculated using 
  
 \begin{equation}
 \label{LS}
@@ -565,7 +569,7 @@ When expressed in the manipulator coordinate system ($x,y,z$), $\mathbf{A_1}$ is
 \mathbf{T}
 \\ 
 \mathbf{F}
-\end{bmatrix}
+\end{bmatrix}.
 \end{equation}
 
 The actuation matrices $\mathbf{A_0}$ and $\mathbf{A_1}$ are functions of the magnetic manipulator geometry and the robot pose. 

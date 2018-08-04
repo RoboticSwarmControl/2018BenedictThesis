@@ -1,21 +1,20 @@
-\chapter[Exploiting Non-Slip Wall Contacts  to Position Two Particles Using The Same Control Input]{Exploiting Non-Slip Wall Contacts  to Position Two Particles Using The Same Control Input}\label{chap-wallFriction}
+\chapter[Two-Body Magnetic Manipulation with global inputs]{Two-Body Magnetic Manipuliation with global inputs}\label{chap-wallFriction}
 
 
 
 This chapter is based on a journal submission with  Shiva Shahrokhi, Jingang Shi,  Benedict Isichei, and Aaron T. Becker.
-My contribution was focused on creating the Intestine Phantom Model and Bovine Intestine model for physical implementation of the algorithm, along with obtaining experimental results. 
+The author's contribution was focused on creating the Intestine Phantom Model and Bovine Intestine model for physical implementation of the algorithm, along with obtaining experimental results. 
 This work was supported by the National Science Foundation under Grant No.\ \href{http://nsf.gov/awardsearch/showAward?AWD_ID=1553063}{ [IIS-1553063]} and \href{http://nsf.gov/awardsearch/showAward?AWD_ID=1619278}{[IIS-1619278]}.
 
 
 Steered particles offer a method for targeted therapy, interventions, and drug delivery in regions inaccessible by large robots.
-Magnetic actuation has the benefits of requiring no tethers, being able to operate from a distance, and in some cases allows imaging for feedback (e.g. MRI).
- This paper investigates particle control with uniform magnetic gradients (the same force is applied everywhere in the workspace).
+As stated in the previous chapter, magnetic actuation has the benefits of requiring no tethers, being able to operate from a distance, and in some cases allows imaging for feedback (e.g. MRI).
+This paper investigates particle control with uniform magnetic gradients (the same force is applied everywhere in the workspace).
 Given three orthogonal magnetic fields, steering one particle in 3D is trivial. 
 Adding additional particles to steer makes the system underactuated because there are more states than control inputs. 
 However, the walls of in vivo and artificial environments often have surface roughness such that the particles do not move unless actuation pulls them away from the wall.
-In previous work, we showed that the individual 2D position of two particles is controllable in a square workspace with non-slip wall contact \cite{shahrokhi2017algorithms}.
-Because in vivo environments are usually not square, this paper extends the previous work to all convex workspaces and to 3D positioning. 
-This paper also implements the algorithms using a hardware setup inspired by the gastrointestinal tract.
+It has been shown that the individual 2D position of two particles is controllable in a square workspace with non-slip wall contact \cite{shahrokhi2017algorithms}.
+Because in vivo environments are usually not square, this paper extends the previous work to all convex workspaces, and then implements the algorithms using a hardware setup inspired by the gastrointestinal tract.
 
 
 %%%%%%%%%%%%%%%
@@ -29,10 +28,10 @@ Such systems are severely underactuated, having 2 degrees of freedom in the shar
  Techniques are needed that can handle this underactuation. 
 
  Positioning is a foundational capability for a robotic system, e.g. placement of brachytherapy seeds. 
- In previous work, we showed that the 2D position of each particle in such a swarm is controllable if the workspace contains a single obstacle the size of one particle \cite{AaronManipulation2013}.
+ In \cite{AaronManipulation2013}, it was shown that the 2D position of each particle in such a swarm is controllable if the workspace contains a single obstacle the size of one particle .
  However, requiring a single, small, rigid obstacle suspended in the middle of the workspace is often an unreasonable constraint, especially in 3D.
 This paper relaxes that constraint, and provides position control algorithms that only require non-slip wall contacts.
-We assume that particles in contact with the boundaries have zero velocity if the uniform control input pushes the particle into the wall.
+The particles in contact with the boundaries are assumed to have zero velocity if the uniform control input pushes the particle into the wall.
 
 
 
@@ -54,11 +53,10 @@ The paper is arranged as follows.
 After a review of recent related work in Sec.  \ref{sec:RelatedWork},
  %Sec. \ref{subsec:FluidInTank} provides analytical position control results of stable configurations in two canonical workspaces with frictionless walls.  These results are limited in the set of shapes that can be generated.  To extend the range of possible shapes,
   Sec.  \ref{sec:theory} introduces a  model for boundary interaction and two shortest path results for representative workspaces.   
-We provide an algorithm to arbitrarily position two particles in Sec.  \ref{sec:PostionControl2Robots}.
-Section  \ref{sec:simulation} describes implementations of the algorithms in simulation and  Sec.  \ref{sec:expResults} describes hardware experiments, as shown in Fig.~\ref{fig:IntroPic}. 
- We end with directions for future research in Sec.  \ref{sec:conclusion}.
+An algorithm is developed to arbitrarily position two particles based on the theory, and Section  \ref{sec:simulation} describes its implementation in simulation and  Sec. \ref{sec:expResults} describes hardware experiments, as shown in Fig.~\ref{fig:IntroPic}. 
+The paper ends with directions for future research in Sec.  \ref{sec:conclusion}.
 
-This paper is an elaboration of preliminary work in a conference paper \cite{shahrokhi2017algorithms} which considered only square workspaces. This work extends the analysis to convex workspaces and 3D positioning. This paper also implements the algorithms using a hardware setup inspired by the anatomy of the gastrointestinal tract.
+This paper is an elaboration of preliminary work in a conference paper \cite{shahrokhi2017algorithms} which considered only square workspaces. This work extends the analysis to convex workspaces and also implements the algorithms using a hardware setup inspired by the anatomy of the gastrointestinal tract.
 
 
 
@@ -98,18 +96,18 @@ If a control input causes the particles to collide with obstacles at different t
  In the absence of obstacles, uniform inputs move a swarm identically.  
  Independent control requires breaking this symmetry. 
 The following sections examine using non-slip boundary contacts to break the symmetry caused by uniform inputs.  
- Our algorithms rely on holding one particle stationary by pushing it into the boundary while moving the other particle. 
- We start with a boundary interaction model in subsection \ref{subsec:WallFriction}.
+ The developed algorithms rely on holding one particle stationary by pushing it into the boundary while moving the other particle. 
+ The section begins with a boundary interaction model in subsection \ref{subsec:WallFriction}.
  
 
-For some configurations, we can obtain the optimal solution. 
+For some configurations, the optimal solution can be obtained. 
 Subsections \ref{subsec:square} and \ref{subsec:circular} provide shortest-path results for two representative workspaces, squares and disks.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Boundary Interaction Model}\label{subsec:WallFriction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  The system dynamics represent particle swarms in low-Reynolds number environments, where viscosity dominates inertial forces and so velocity is proportional to input force~\cite{Purcell1977}. 
  In this regime, the input force command $\mathbf{u}(t)$ controls the velocity of the particles.  
- If the $i^{\textrm{th}}$ particle has position $\mathbf{x}_i(t)$ and velocity $\dot{\mathbf{x}}_i(t)$,  we assume the following system model:
+ If the $i^{\textrm{th}}$ particle has position $\mathbf{x}_i(t)$ and velocity $\dot{\mathbf{x}}_i(t)$, the following system model is assumed:
  \begin{align}\label{eq:swarmDynamicsAndFric} 
 \dot{\mathbf{x}}_i(t)
  &=
@@ -127,8 +125,8 @@ Subsections \ref{subsec:square} and \ref{subsec:circular} provide shortest-path 
  
  
   The same model can be generalized to particles moved by fluid flow where the vector direction of fluid flow $\mathbf{u}(t)$ controls the velocity of particles, or for a swarm of particles that move at a constant speed in a direction specified by a uniform input $\mathbf{u}(t)$~\cite{Rubenstein2012}.
-  As in our model, fluid flowing in a pipe has zero velocity along the boundary. Similar mechanical systems exist at larger scales, e.g. all tumblers of a combination lock move uniformly unless obstructed by an obstacle.
- Our control problem is to design the control inputs $\mathbf{u}(t)$ to deliver two particles to goal positions.
+  As in this model, fluid flowing in a pipe has zero velocity along the boundary. Similar mechanical systems exist at larger scales, e.g. all tumblers of a combination lock move uniformly unless obstructed by an obstacle.
+The control problem is to design the control inputs $\mathbf{u}(t)$ to deliver two particles to goal positions.
  
  \subsection{Example: Shortest Path in a Square Workspace}\label{subsec:square}
  Changing the relative positions of particles in any workspace requires making one particle contact the boundary.
@@ -146,142 +144,142 @@ The shortest three-move path that reconfigures two particles has the property th
 } \vspace{-1em}
 \end{figure}
 %
-
-This optimization result was implemented in our previous work using a square workspace \cite{shahrokhi2017algorithms}.
- Fig.~\ref{fig:shapeControlMathematica1} shows solutions from a \emph{Mathematica} implementation in a square workspace for six representative configurations.
-\begin{figure*}
-\renewcommand{\figwid}{0.18\columnwidth}
-
-{\begin{overpic}[width =\figwid]{story1mov0.pdf}\put(10,10){Start}
-\put(10,85){a)}
-\put(30,70){$s_1$}
-\put(48,88){$g_1$}
-\put(65,17){$s_2$}
-\put(87,52){$g_2$}
-\put(60, 3.9){{\tiny$\updownarrow$}~$\epsilon$}
-\end{overpic}
-\begin{overpic}[width =\figwid]{story1move.pdf}\put(10,10){Move 1}
-\put(110,50){If $(\Delta g- \Delta s) = (0,0)$, only one move is needed}
-\put(65, 47){{$\xupdownarrow{1.8cm}$}$L$}
-%\put(47, 65){$\xleftrightarrow{1.8cm}$}
-\end{overpic}
-}\\
-
-\vspace{-0.75em}
-{\begin{overpic}[width =\figwid]{story3Moves1.pdf}\put(10,10){Start}
-\put(10,85){b)}
-\put(28,70){$s_1$}
-\put(50,80){$g_1$}
-\put(62,15){$s_2$}
-\put(30,22){$g_2$}
-\end{overpic}
-\begin{overpic}[width =\figwid]{story3Moves2.pdf}\put(10,10){Move 1}
-\end{overpic}
-\begin{overpic}[width =\figwid]{story3Moves3.pdf}\put(10,10){Move 2}
-\end{overpic}
-\begin{overpic}[width =\figwid]{story3Moves4.pdf}\put(10,10){Move 3}
-\put(110,50){Three-move sequence}
-\put(12,38){$m_3$}
-\put(48,52){$m_2$}
-\put(65,30){$m_1$}
-\end{overpic}
-%\begin{overpic}[width =\figwid]{s5}\put(50,80){Move 4}
+%
+%This optimization result was implemented in previous work using a square workspace \cite{shahrokhi2017algorithms}.
+% Fig.~\ref{fig:shapeControlMathematica1} shows solutions from a \emph{Mathematica} implementation in a square workspace for six representative configurations.
+%\begin{figure*}
+%\renewcommand{\figwid}{0.18\columnwidth}
+%
+%{\begin{overpic}[width =\figwid]{story1mov0.pdf}\put(10,10){Start}
+%\put(10,85){a)}
+%\put(30,70){$s_1$}
+%\put(48,88){$g_1$}
+%\put(65,17){$s_2$}
+%\put(87,52){$g_2$}
+%\put(60, 3.9){{\tiny$\updownarrow$}~$\epsilon$}
 %\end{overpic}
-%\begin{overpic}[width =\figwid]{S6.pdf}\put(50,80){Move 5}
+%\begin{overpic}[width =\figwid]{story1move.pdf}\put(10,10){Move 1}
+%\put(110,50){If $(\Delta g- \Delta s) = (0,0)$, only one move is needed}
+%\put(65, 47){{$\xupdownarrow{1.8cm}$}$L$}
+%%\put(47, 65){$\xleftrightarrow{1.8cm}$}
 %\end{overpic}
-}\\
-
-\vspace{-0.75em}
-{
-\begin{overpic}[width =\figwid]{story5move1.pdf}\put(10,10){Move 1}
-\put(10,85){c)}
-\put(28,70){$s_1$}
-\put(62,28){$g_1$}
-\put(87,50){$s_2$}
-\put(30,22){$g_2$}
-\end{overpic}
-\begin{overpic}[width =\figwid]{story5move2.pdf}\put(10,10){Move 2}
-\end{overpic}
-\begin{overpic}[width =\figwid]{story5move3.pdf}\put(10,10){Move 3}
-\end{overpic}
-\begin{overpic}[width =\figwid]{story5move4.pdf}\put(10,10){Move 4}
-\end{overpic}
-\begin{overpic}[width =\figwid]{story5move5.pdf}\put(10,10){Move 5}
-\end{overpic}
-}\\
-
-\vspace{-0.75em}
-%\vspace{1em}
-{
-\begin{overpic}[width =\figwid]{story7move1.pdf}\put(50,80){Move 1}
-\put(10,85){d)}
-\put(25,30){$s_1$}
-\put(89,70){$g_1$}
-\put(67,20){$s_2$}
-\put(28,75){$g_2$}
-\end{overpic}
-\begin{overpic}[width =\figwid]{story7move2.pdf}\put(50,80){Move 2}
-\end{overpic}
-\begin{overpic}[width =\figwid]{story7move5.pdf}\put(50,80){Move 3}
-\end{overpic}
-\begin{overpic}[width =\figwid]{story7move6.pdf}\put(50,80){Move 4}
-\end{overpic}
-\begin{overpic}[width =\figwid]{story7move7.pdf}\put(50,80){Move 5}
-\end{overpic}
-}\\
-
-\vspace{-0.75em}
-{
-\begin{overpic}[width =\figwid]{storySame1.pdf}\put(50,80){Move 1}
-\put(10,85){e)}
-\put(15,35){$s_1,g_2$}
-\put(65,35){$s_2,g_1$}
-\end{overpic}
-\begin{overpic}[width =\figwid]{storySame2.pdf}\put(50,80){Move 2}
-\end{overpic}
-\begin{overpic}[width =\figwid]{storySame3.pdf}\put(50,80){Move 3}
-\end{overpic}
-\begin{overpic}[width =\figwid]{storySame4.pdf}\put(50,80){Move 4}
-\end{overpic}
-\begin{overpic}[width =\figwid]{storySame5.pdf}\put(50,80){Move 5}
-\end{overpic}
-}\\
-
-\vspace{-0.75em}
-{
-\begin{overpic}[width =\figwid]{storyWorst1.pdf}\put(60,10){Move 1}
-\put(10,85){f)}
-\put(15,10){$s_1,g_2$}
-\put(65,88){$s_2,g_1$}
-\end{overpic}
-\begin{overpic}[width =\figwid]{storyWorst2.pdf}\put(60,10){Move 2}
-\end{overpic}
-\begin{overpic}[width =\figwid]{storyWorst4.pdf}\put(60,10){Move 3}
-\end{overpic}
-\begin{overpic}[width =\figwid]{storyWorst6.pdf}\put(60,10){Move 4}
-\end{overpic}
-\begin{overpic}[width =\figwid]{storyWorst7.pdf}\put(60,10){Move 5}
-\put(15, 85){worst-case}\put(15,75){path length}\put(15, 62){$(\sqrt{2}+2)L$}
-\end{overpic}
-}\\
-
-
-\vspace{-1em}
-
-\caption{\label{fig:shapeControlMathematica1}{Frames from an implementation of Alg.\ \ref{alg:optimalAlg}: two particle positioning using walls with non-slip contacts. 
-Particle start positions are shown by squares, and goal positions by circles.  Dashed lines show the shortest route if particles could be controlled independently.  Solid arrows show path given by  Alg.\ \ref{alg:optimalAlg}.
-%Online dmonstration and source code at \cite{Shahrokhi2015mathematicaParticle}.
-%The bottom row shows an extreme case where the robots must switch position.
-}
-\vspace{-1em}
-}
-\end{figure*}
+%}\\
+%
+%\vspace{-0.75em}
+%{\begin{overpic}[width =\figwid]{story3Moves1.pdf}\put(10,10){Start}
+%\put(10,85){b)}
+%\put(28,70){$s_1$}
+%\put(50,80){$g_1$}
+%\put(62,15){$s_2$}
+%\put(30,22){$g_2$}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{story3Moves2.pdf}\put(10,10){Move 1}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{story3Moves3.pdf}\put(10,10){Move 2}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{story3Moves4.pdf}\put(10,10){Move 3}
+%\put(110,50){Three-move sequence}
+%\put(12,38){$m_3$}
+%\put(48,52){$m_2$}
+%\put(65,30){$m_1$}
+%\end{overpic}
+%%\begin{overpic}[width =\figwid]{s5}\put(50,80){Move 4}
+%%\end{overpic}
+%%\begin{overpic}[width =\figwid]{S6.pdf}\put(50,80){Move 5}
+%%\end{overpic}
+%}\\
+%
+%\vspace{-0.75em}
+%{
+%\begin{overpic}[width =\figwid]{story5move1.pdf}\put(10,10){Move 1}
+%\put(10,85){c)}
+%\put(28,70){$s_1$}
+%\put(62,28){$g_1$}
+%\put(87,50){$s_2$}
+%\put(30,22){$g_2$}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{story5move2.pdf}\put(10,10){Move 2}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{story5move3.pdf}\put(10,10){Move 3}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{story5move4.pdf}\put(10,10){Move 4}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{story5move5.pdf}\put(10,10){Move 5}
+%\end{overpic}
+%}\\
+%
+%\vspace{-0.75em}
+%%\vspace{1em}
+%{
+%\begin{overpic}[width =\figwid]{story7move1.pdf}\put(50,80){Move 1}
+%\put(10,85){d)}
+%\put(25,30){$s_1$}
+%\put(89,70){$g_1$}
+%\put(67,20){$s_2$}
+%\put(28,75){$g_2$}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{story7move2.pdf}\put(50,80){Move 2}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{story7move5.pdf}\put(50,80){Move 3}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{story7move6.pdf}\put(50,80){Move 4}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{story7move7.pdf}\put(50,80){Move 5}
+%\end{overpic}
+%}\\
+%
+%\vspace{-0.75em}
+%{
+%\begin{overpic}[width =\figwid]{storySame1.pdf}\put(50,80){Move 1}
+%\put(10,85){e)}
+%\put(15,35){$s_1,g_2$}
+%\put(65,35){$s_2,g_1$}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{storySame2.pdf}\put(50,80){Move 2}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{storySame3.pdf}\put(50,80){Move 3}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{storySame4.pdf}\put(50,80){Move 4}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{storySame5.pdf}\put(50,80){Move 5}
+%\end{overpic}
+%}\\
+%
+%\vspace{-0.75em}
+%{
+%\begin{overpic}[width =\figwid]{storyWorst1.pdf}\put(60,10){Move 1}
+%\put(10,85){f)}
+%\put(15,10){$s_1,g_2$}
+%\put(65,88){$s_2,g_1$}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{storyWorst2.pdf}\put(60,10){Move 2}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{storyWorst4.pdf}\put(60,10){Move 3}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{storyWorst6.pdf}\put(60,10){Move 4}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{storyWorst7.pdf}\put(60,10){Move 5}
+%\put(15, 85){worst-case}\put(15,75){path length}\put(15, 62){$(\sqrt{2}+2)L$}
+%\end{overpic}
+%}\\
+%
+%
+%\vspace{-1em}
+%
+%\caption{\label{fig:shapeControlMathematica1}{Frames from an implementation of Alg.\ \ref{alg:optimalAlg}: two particle positioning using walls with non-slip contacts. 
+%Particle start positions are shown by squares, and goal positions by circles.  Dashed lines show the shortest route if particles could be controlled independently.  Solid arrows show path given by  Alg.\ \ref{alg:optimalAlg}.
+%%Online dmonstration and source code at \cite{Shahrokhi2015mathematicaParticle}.
+%%The bottom row shows an extreme case where the robots must switch position.
+%}
+%\vspace{-1em}
+%}
+%\end{figure*}
 
  
  \subsection{Shortest Path in Unit Disk that Intersects Circumference}\label{subsec:circular}
 
  The shortest path between two points in the unit disk that intersects the circumference is composed of two straight line segments and has an optimal contact point, as shown in Fig.~\ref{fig:shortestpath}. 
- The problem can be simplified by choosing the coordinate system carefully. We define the $x$-axis along the line from the circle center to the starting point: $S=(s,0)$, and define the point of intersection by the angle $\theta$ from the $x$-axis: $P=(\cos \theta,\sin \theta)$. Define the final point $E$ by a radius $e$ and angle $\beta$: $E=e(\cos \beta,\sin \beta)$. Then the length of the two line segments is 
+ The problem can be simplified by choosing the coordinate system carefully. The $x$-axis along the line from the circle center to the starting point: $S=(s,0)$ is defined, and so is the point of intersection by the angle $\theta$ from the $x$-axis: $P=(\cos \theta,\sin \theta)$. The final point $E$ is defined by a radius $e$ and angle $\beta$: $E=e(\cos \beta,\sin \beta)$. Then the length of the two line segments is 
  \begin{align}\scalebox{.8}{$
  \sqrt{{ (s-\cos \theta)^2+\sin^2 \theta}} +  \sqrt{(e \cos \beta-\cos \theta)^2+(e \sin \beta-\sin \theta)^2},$}
  \end{align}
@@ -303,303 +301,293 @@ Particle start positions are shown by squares, and goal positions by circles.  D
  The length of the two line segments as a function of $\theta$ is drawn in the right plot of Fig.~\ref{fig:shortestpath}. There are several simple solutions. If $s$ is 1 or $e$ is 0 or $\beta$ is 0, the optimal angle $\theta^*$ is 0. If $e$ is 1 or $s$ is 0, the optimal angle is $\beta$. Label the origin $O$. 
  The optimal path satisfies the law of reflection off the unit circle, with angle of incidence equal to angle of reflection.
  The angle $\angle{OPS}$ (from the origin to $P$ to $S$) is the same as the angle $\angle{OPE}$ (from the origin to $P$ to $E$). 
- We name these angles $\alpha$. This can be proved by drawing an ellipse whose foci are $S$ and $E$. When the ellipse is tangent to the circle, the point of tangency is $P$. 
-  Since the distance from the origin to $P$ is always 1, we can set up three equalities using the law of sines:
- From triangle $OSP$: $\frac{\sin \alpha}{s}=\frac{\sin(\alpha + \theta)}{1}=\frac{\sin \theta}{||SP||}$, and from triangle $OEP$: $\frac{\sin \alpha}{e}=\frac{\sin(\beta - \theta)}{||EP||}$. If we mirror the point $S$ about line $\overline{OP}$ and label this point $C$, from triangle $CEO$: $\frac{\sin(\alpha + \theta)}{e}=\frac{\sin(2 \theta - \beta)}{||CE||}$.
+ These angles are named $\alpha$. This can be proved by drawing an ellipse whose foci are $S$ and $E$. When the ellipse is tangent to the circle, the point of tangency is $P$. 
+  Since the distance from the origin to $P$ is always 1, three equalities can be set up using the law of sines:
+ From triangle $OSP$: $\frac{\sin \alpha}{s}=\frac{\sin(\alpha + \theta)}{1}=\frac{\sin \theta}{||SP||}$, and from triangle $OEP$: $\frac{\sin \alpha}{e}=\frac{\sin(\beta - \theta)}{||EP||}$. If the point $S$ is mirrored about line $\overline{OP}$ and this point is labelled $C$, from triangle $CEO$: $\frac{\sin(\alpha + \theta)}{e}=\frac{\sin(2 \theta - \beta)}{||CE||}$.
  
- Simplifying this system of equations results in $s=e \csc \theta (s \sin(2 \theta-\beta)+\sin(\beta-\theta))$. Solving this last equation results in a quartic solution that has a closed-form solution with four roots, each of which can be either a clockwise or a counterclockwise rotation $\theta$, depending on the sign of $\beta$, with $-\pi\leq\beta\leq\pi$. We evaluate each and select the solution that results in the shortest length path. %This optimal path satisfies the law of reflection off the unit circle, with angle of incidence equal to angle of reflection. 
- For an interactive Mathematica demonstration of this shortest path, see \cite{BeckerShortestPath}. Because the closed form solution is long, it is included in the paper attachments.
- 
-
+ Simplifying this system of equations results in $s=e \csc \theta (s \sin(2 \theta-\beta)+\sin(\beta-\theta))$. Solving this last equation results in a quartic solution that has a closed-form solution with four roots, each of which can be either a clockwise or a counterclockwise rotation $\theta$, depending on the sign of $\beta$, with $-\pi\leq\beta\leq\pi$. Each is evaluated and the solution that results in the shortest length path is selected. %This optimal path satisfies the law of reflection off the unit circle, with angle of incidence equal to angle of reflection. 
+ For an interactive Mathematica demonstration of this shortest path, see \cite{BeckerShortestPath}. 
  
 %%%%%%%%%%%%%%%
 
 
-\section{Position Control of Two Particles Using Boundary Interaction}\label{sec:PostionControl2Robots}
-
-This section presents algorithms that use non-slip contacts with walls to arbitrarily position two particles in a convex workspace. 
- Workspaces are 2D convex polygons with no internal obstacles. 
- Assume two particles are initialized at $s_1$ and $s_2$ with corresponding goal destinations $g_1$ and $g_2$. 
- Denote the current positions of the particles  $p_1$ and $p_2$. Values $.x$ and $.y$ denote the $x$ and $y$ coordinates, i.e., $p_1.x$ and $p_1.y$ denote the $x$ and $y$ locations of $p_1$. 
- Algorithm \ref{alg:optimalAlg} can now handle any convex workspace, including the special limit case of a circular workspace. In the last subsection we present techniques to control 3D positioning of two particles.
-
-
-
-
-
- %%%%%%%%%%%%%%%%%%%%%%%%%%%\
-\subsection{$\Delta$ Configuration Space}
-The configuration space for two particles is a four dimensional manifold. Translating both particles the same amount is a trivial operation, but changing the relative positions requires boundary interaction. For this reason, our algorithms use the two dimensional $\Delta$ configuration space.
-The $\Delta$ configuration space is a set of all possible $\Delta p$ values, defined as the difference in position of the first particle from the second particle: $\Delta p = p_2 - p_1$.
-We use the $\Delta$ configuration space to plan move sequences that achieve the desired relative spacing.  Once the particles have the correct relative spacing, they can be delivered to the goal configuration in one move.
-
-The  $\Delta$ configuration space for an $n$-sided convex polygon $P$ can be constructed in a method analogous to computing configuration space obstacles for polygons~\cite{lozano1983spatial}. 
- Translate $n$ copies of $P$  so that each copy moves a different vertex of $P$ to $(0,0)$.
-Because $P$ is convex, the convex-hull of all these translated vertices is the boundary of the  $\Delta$ configuration space.
- For an $n$-sided convex polygon, the $\Delta$ configuration space is a $2n$-sided convex polygon.
-  Even-sided regular polygons are a special case in which half the sides align and the $\Delta$ configuration space is $n$-sided. 
-An example $\Delta$ configuration space construction is shown in Fig.~\ref{fig:irregular}: 
-a four-sided workspace is on the left, 
-the four translated copies with dashed lines outlining the convex hull is in the middle,
- and the resulting $\Delta$ configuration space is on the right.  
-% The 2-move reachable sets for the given $\Delta$s starting configuration are drawn in transparent blue.
-%The following subsection describes how 2-move reachable sets are constructed.
-
-
- %%%%%%%%%%%%%%%%%%%%%%%%%%%\
-\subsection{Two Particle Path Planning}
-
-
-  The \emph{2-move reachable set} is the locus of points in the $\Delta$ configuration space corresponding to any two-move sequence where the first move brings one particle into contact with the boundary, and the second move translates the second particle without moving the first.
- For the given $\Delta s$ (starting configuration), the rightmost image of Fig.~\ref{fig:irregular} draws the 2-move reachable sets  in transparent blue.
- Figure ~\ref{fig:polygon} shows the starting and ending relative positions as $\Delta s$ and $\Delta g$ in the $\Delta$ configuration space.  The next subsections give procedures to compute the 2-move reachable set.% in Fig.~\ref{fig:regionMove}.% The reachable set is the part of $\Delta$ configuration space where if one particle touches a wall in a specific location, the other particle can make the required relative distance without causing the touching particle to move. We will discuss how to make reachable sets in the next subsections. 
- 
-The goal is to move the particles within $\delta$ of the goal positions using a shared control input where $\delta$ is an arbitrary small number. We do this by first moving them within $\delta$ of the correct relative position and then translating the particles to the goal. The relative position is $||\Delta g - \Delta p || = ||(g_2-g_1)- (p_2-p_1)||$.  
-
- Algorithm \ref{alg:optimalAlg} assigns a uniform control input at every instance.
-% Algorithm ~\ref{alg:optimalAlg} 
- It first computes the 2-move reachable set. If the goal relative position is in the 2-move reachable set, we move particles to achieve that relative position. If it is not in the 2-move reachable set, we move particles to achieve the closest point on this reachable set from $\Delta g$, which is $\Delta g_c$. 
-
- \emph{Achieving} a $\Delta g_c$ configuration requires two-moves, the first to move until one particle touches a wall, and the second to adjust the relative spacing.
- Once the correct \emph{relative} position has been achieved, a final translation delivers both particles to their goal destinations. %we go to the final goal position. If it is not our final goal, 
- Otherwise, we iterate until we reach the goal. 
-\begin{algorithm}[htb]
-\caption{ { \sc 2-ParticlePathPlanning}($s_1,s_2,g_1,g_2,P,\epsilon$)}\label{alg:optimalAlg}
-\begin{algorithmic}[1]
-%\scriptsize
-\Require knowledge of starting $(s_1,s_2)$ and goal $(g_1,g_2)$ positions of  two particles. 
-%$(0,0)$ is bottom corner,
- $P$ is a description of the workspace. $\epsilon$ is a positive error bound.
-% \emph{PathList} contains all the paths sorted by their path length plus an admissible heuristic. 
-% \State  \emph{PathList} $\gets \{\}$
- \State $(p_1,p_2) \gets (s_1,s_2) $ \Comment $p_1 , p_2$ are current positions
-\State  moves $\gets \{\}$
-% \State $R \gets   \{ p_1,p_2,g_1,g_2  ,\textrm{moves}\} $ \Comment $R$ contains the current particle positions, the goal positions, and the move sequence
- \State $\Delta p \gets p_2-p_1$
- \State $\Delta g \gets g_2-g_1$
-\While {$||\Delta p - \Delta g|| > \epsilon$}  %R.p_1 \ne g_1$ \textbf{and} $R.p_2 \ne g_2$}
-\State $R_{\textrm{SET}}\gets$  Compute 2-move reachable set  \Comment use Alg.~\ref{alg:polygonReachbale} or \ref{alg:circularReachbale}
-\State $ \Delta g_c\gets $nearest point in $R_{\textrm{SET}}$ to $\Delta g$
-\State $m \gets $move-to-wall corresponding to $\Delta g_c$
-\State moves $\gets$ Append $m$ to moves
-\State $(p_1, p_2)$ $\gets$ ApplyMove $m$ to $(p_1,p_2)$
-%\State $p_2$ = ApplyMove($p_2,m$)
- \State $\Delta p \gets p_2-p_1$
-\EndWhile
-\State moves $\gets$ Append $g_2-p_2$ to moves \Comment translate to goal
-\State \Return moves
-\end{algorithmic}
-\end{algorithm}
-
-
-
-\begin{figure}
-\centering
-\begin{overpic}[width=\columnwidth]{irregular.pdf}\end{overpic}
-\caption{\label{fig:irregular}
-%\textcolor{red}{Shiva, this image is nice.  A few suggestions: ?TODO: Label the middle image 'Translate workspace around (0,0)', and draw the workspace outlines with different colors and thicknesses}
-Workspace and $\Delta$ configuration space is shown for an arbitrary convex polygon with $n=4$ sides. The 2-move reachable sets for this initial configuration (shown by square markers) are drawn in transparent blue.
-}
-\end{figure}
-
-
-\subsection{Convex Polygonal Workspaces: 2-Move Reachable Set}
-   \begin{figure}
-\centering
-\renewcommand{\figwid}{0.4\columnwidth}
-{\begin{overpic}[width =\figwid]{differentNumSides.pdf}\put(5,100){Workspace}\put(20,100){$\Delta$ configuration space}
-\end{overpic}
-}
-\caption{\label{fig:polygon}{The $\Delta$ configuration space is all possible configurations of $p_2-p_1$. The sets reachable in two moves, called \emph{2-move reachable sets}, are drawn with transparent blue polygons. A polygon with $n$ sides has $n$ 2-move reachable sets, but if $n$ is even and the polygon is regular, half the reachable sets overlap. If $\Delta g$ is in the 2-move reachable sets, we can achieve the required relative position in two moves. If $\Delta g$ is not in the 2-move reachable set, we define a temporary goal $\Delta g_c$ (the closest point on the 2-move reachable set to $\Delta g$) and apply two moves to achieve $\Delta g_c$. We repeat this process until the relative goal position is achieved.
-%Workspace and $\Delta$ configuration spaces for different polygonal workspaces and their representative $\Delta$ configuration spaces and reachable sets. As the number of sides in the polygon increases, the total area of the $\Delta$ configuration space is four times of the workspace.
-}
-\vspace{-1em}
-}
-\end{figure}
-
-
-
-\begin{figure}
-\centering
-\begin{overpic}[width=0.32\columnwidth]{twoRobotRegionH.pdf}\end{overpic}
-\begin{overpic}[width=0.32\columnwidth]{twoRobotRegionV.pdf}\end{overpic}
-\begin{overpic}[width=0.32\columnwidth]{DeltaConfigSquare.pdf}\end{overpic}
-\caption{\label{fig:TwoRegions}
-Boundary interaction is used to change the relative positions of the particles. Each particle gets the same control input. 
-(left) If particle 2 contacts the bottom wall before particle 1 reaches a wall, particle 2 can reach anywhere along the green line, and  particle 1 can move to anywhere in the shaded area. 
-(middle) Similarly, if particle 2 contacts the right wall before particle 1 reaches a wall, particle 2 can reach anywhere along the green line, and then particle 1 can move to anywhere in the shaded area. 
-(right) The 2-move reachable sets in the $\Delta$ configuration space is shown.
-}
-\end{figure}
-
-\begin{figure*}
-\centering
-\renewcommand{\figwid}{0.33\columnwidth}
-\begin{overpic}[width =\figwid]{anypolygon1.pdf}\put(12,-3){\small{Case 1: $s_1$ does not contact boundary}}\put(28,39){$s_2$}\put(63,50){$s_1$}
-\end{overpic}
-\begin{overpic}[width =\figwid]{anypolygon2.pdf}\put(20,-3){\small{Case 2: $s_1$ contacts boundary}}\put(20,40){$s_2$}\put(55,58){$s_1$}
-\end{overpic}
-\begin{overpic}[width =\figwid]{anypolygon3.pdf}\put(-6,-3){\small{Polygon generated by first contacts along $\overline{ p_i p_{i+1}}$ }}
-\end{overpic}
-\caption{\label{fig:polygonAlg}{ Steps to generate  the 2-move reachable set when  one particle collides with edge $\overline{ p_i p_{i+1}}$ of a convex polygonal workspace.}
-\vspace{-1em}
-}
-\end{figure*}
- Figure \ref{fig:polygon} shows six workspaces, their $\Delta$ configuration spaces, and the 2-move reachable sets that correspond to representative initial conditions.
- Figure \ref{fig:TwoRegions} highlights the construction of the 2-move reachable sets for a square workspace. There are four 2-move reachable sets, but the horizontal (and vertical) reachable sets are equivalent in the $\Delta$ configuration space so we can plan in this space and choose between the two options to minimize the total distance.
- % The \emph{2-move reachable set} is the locus of points in the $\Delta$ configuration space corresponding to any two-move sequence where the first move brings one particle into contact with the boundary, and the second move translates the second particle without moving the first. 
-Algorithm \ref{alg:polygonReachbale} computes the 2-move reachable set for any convex workspace.
-The set is constructed by considering each edge of the workspace. We name each vertex as $p_i$ where $1\leq i \leq n$.
-  If one particle contacts edge $\overline{ p_i p_{i+1}}$ before the other (one particle will always contact before the other unless the particles are parallel to the wall), the corresponding 2-move reachable set is a polygon, constructed in lines 2-13 of Alg.~\ref{alg:polygonReachbale}. The union of these polygons for all $n$ sides is the 2-move reachable set of $\Delta$ configurations.
-Figure~\ref{fig:polygonAlg} illustrates the procedure to construct the  2-move reachable set generated by collisions with the $\overline{ p_i p_{i+1}}$ edge.
+%\section{Position Control of Two Particles Using Boundary Interaction}\label{sec:PostionControl2Robots}
+%
+%This section presents algorithms that use non-slip contacts with walls to arbitrarily position two particles in a convex workspace. 
+% Workspaces are 2D convex polygons with no internal obstacles. 
+% Assume two particles are initialized at $s_1$ and $s_2$ with corresponding goal destinations $g_1$ and $g_2$. 
+% Denote the current positions of the particles  $p_1$ and $p_2$. Values $.x$ and $.y$ denote the $x$ and $y$ coordinates, i.e., $p_1.x$ and $p_1.y$ denote the $x$ and $y$ locations of $p_1$. 
+% Algorithm \ref{alg:optimalAlg} can now handle any convex workspace, including the special limit case of a circular workspace.
+%
+%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%\
+%\subsection{$\Delta$ Configuration Space}
+%The configuration space for two particles is a four dimensional manifold. Translating both particles the same amount is a trivial operation, but changing the relative positions requires boundary interaction. For this reason, the algorithms use the two dimensional $\Delta$ configuration space.
+%The $\Delta$ configuration space is a set of all possible $\Delta p$ values, defined as the difference in position of the first particle from the second particle: $\Delta p = p_2 - p_1$.
+%We use the $\Delta$ configuration space to plan move sequences that achieve the desired relative spacing.  Once the particles have the correct relative spacing, they can be delivered to the goal configuration in one move.
+%
+%The  $\Delta$ configuration space for an $n$-sided convex polygon $P$ can be constructed in a method analogous to computing configuration space obstacles for polygons~\cite{lozano1983spatial}. 
+% Translate $n$ copies of $P$  so that each copy moves a different vertex of $P$ to $(0,0)$.
+%Because $P$ is convex, the convex-hull of all these translated vertices is the boundary of the  $\Delta$ configuration space.
+% For an $n$-sided convex polygon, the $\Delta$ configuration space is a $2n$-sided convex polygon.
+%  Even-sided regular polygons are a special case in which half the sides align and the $\Delta$ configuration space is $n$-sided. 
+%An example $\Delta$ configuration space construction is shown in Fig.~\ref{fig:irregular}: 
+%a four-sided workspace is on the left, 
+%the four translated copies with dashed lines outlining the convex hull is in the middle,
+% and the resulting $\Delta$ configuration space is on the right.  
+%% The 2-move reachable sets for the given $\Delta$s starting configuration are drawn in transparent blue.
+%%The following subsection describes how 2-move reachable sets are constructed.
+%
+%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%\
+%\subsection{Two Particle Path Planning}
+%
+%
+%  The \emph{2-move reachable set} is the locus of points in the $\Delta$ configuration space corresponding to any two-move sequence where the first move brings one particle into contact with the boundary, and the second move translates the second particle without moving the first.
+% For the given $\Delta s$ (starting configuration), the rightmost image of Fig.~\ref{fig:irregular} draws the 2-move reachable sets  in transparent blue.
+% Figure ~\ref{fig:polygon} shows the starting and ending relative positions as $\Delta s$ and $\Delta g$ in the $\Delta$ configuration space.  The next subsections give procedures to compute the 2-move reachable set.% in Fig.~\ref{fig:regionMove}.% The reachable set is the part of $\Delta$ configuration space where if one particle touches a wall in a specific location, the other particle can make the required relative distance without causing the touching particle to move. We will discuss how to make reachable sets in the next subsections. 
 % 
- \begin{algorithm}[htb]
-\caption{ { \sc ReachableSetPolygon}($s_1,s_2,g_1,g_2, P$)}\label{alg:polygonReachbale}
-\begin{algorithmic}[1]
-%\scriptsize
-\Require knowledge of starting $(s_1,s_2)$ and goal $(g_1,g_2)$ positions of  two particles. 
-$P$ is a list of the vertices of a convex polygon. %RSet contains all the reachable polygons.
-\State $R_{\textrm{SET}\gets \{\}}$
-\For {$p_i$ in $P$}
-\State $p_{i}' \gets s_1 + s_2 - p_i$
-\State $p_{i+1}' \gets s_1 + s_2 - p_{i+1}$
-\State $L \gets \overline{ p_i' p_{i+1}'}$ \Comment{line $(p_{i}', p_{i+1}')$}
-\State $l_i, l_{i+1} \gets $ intersections of $L$ and polygon $P$
-\If {$p_{i}'$ not inside polygon $P$}
-\State $p_{i}' \gets l_i$
-\EndIf
-\If {$p_{i+1}'$ not inside polygon $P$}
-\State $p_{i+1}' \gets l_{i+1}$
-\EndIf
-%\State $D \gets$ All vertices $\in [ l_i , l_{i+1} ] $
-\State $D \gets$ $s_2 - s_1 -([l_i, v_{\textrm{min}}, ..., p_i ] -p_i' $,
+%The goal is to move the particles within $\delta$ of the goal positions using a shared control input where $\delta$ is an arbitrary small number. We do this by first moving them within $\delta$ of the correct relative position and then translating the particles to the goal. The relative position is $||\Delta g - \Delta p || = ||(g_2-g_1)- (p_2-p_1)||$.  
+%
+% Algorithm \ref{alg:optimalAlg} assigns a uniform control input at every instance.
+%% Algorithm ~\ref{alg:optimalAlg} 
+% It first computes the 2-move reachable set. If the goal relative position is in the 2-move reachable set, we move particles to achieve that relative position. If it is not in the 2-move reachable set, we move particles to achieve the closest point on this reachable set from $\Delta g$, which is $\Delta g_c$. 
+%
+% \emph{Achieving} a $\Delta g_c$ configuration requires two-moves, the first to move until one particle touches a wall, and the second to adjust the relative spacing.
+% Once the correct \emph{relative} position has been achieved, a final translation delivers both particles to their goal destinations. %we go to the final goal position. If it is not our final goal, 
+% Otherwise, we iterate until we reach the goal. 
+%\begin{algorithm}[htb]
+%\caption{ { \sc 2-ParticlePathPlanning}($s_1,s_2,g_1,g_2,P,\epsilon$)}\label{alg:optimalAlg}
+%\begin{algorithmic}[1]
+%%\scriptsize
+%\Require knowledge of starting $(s_1,s_2)$ and goal $(g_1,g_2)$ positions of  two particles. 
+%%$(0,0)$ is bottom corner,
+% $P$ is a description of the workspace. $\epsilon$ is a positive error bound.
+%% \emph{PathList} contains all the paths sorted by their path length plus an admissible heuristic. 
+%% \State  \emph{PathList} $\gets \{\}$
+% \State $(p_1,p_2) \gets (s_1,s_2) $ \Comment $p_1 , p_2$ are current positions
+%\State  moves $\gets \{\}$
+%% \State $R \gets   \{ p_1,p_2,g_1,g_2  ,\textrm{moves}\} $ \Comment $R$ contains the current particle positions, the goal positions, and the move sequence
+% \State $\Delta p \gets p_2-p_1$
+% \State $\Delta g \gets g_2-g_1$
+%\While {$||\Delta p - \Delta g|| > \epsilon$}  %R.p_1 \ne g_1$ \textbf{and} $R.p_2 \ne g_2$}
+%\State $R_{\textrm{SET}}\gets$  Compute 2-move reachable set  \Comment use Alg.~\ref{alg:polygonReachbale} or \ref{alg:circularReachbale}
+%\State $ \Delta g_c\gets $nearest point in $R_{\textrm{SET}}$ to $\Delta g$
+%\State $m \gets $move-to-wall corresponding to $\Delta g_c$
+%\State moves $\gets$ Append $m$ to moves
+%\State $(p_1, p_2)$ $\gets$ ApplyMove $m$ to $(p_1,p_2)$
+%%\State $p_2$ = ApplyMove($p_2,m$)
+% \State $\Delta p \gets p_2-p_1$
+%\EndWhile
+%\State moves $\gets$ Append $g_2-p_2$ to moves \Comment translate to goal
+%\State \Return moves
+%\end{algorithmic}
+%\end{algorithm}
+%
+%
+%
+%\begin{figure}
+%\centering
+%\begin{overpic}[width=\columnwidth]{irregular.pdf}\end{overpic}
+%\caption{\label{fig:irregular}
+%%\textcolor{red}{Shiva, this image is nice.  A few suggestions: ?TODO: Label the middle image 'Translate workspace around (0,0)', and draw the workspace outlines with different colors and thicknesses}
+%Workspace and $\Delta$ configuration space is shown for an arbitrary convex polygon with $n=4$ sides. The 2-move reachable sets for this initial configuration (shown by square markers) are drawn in transparent blue.
+%}
+%\end{figure}
+%
+%
+%\subsection{Convex Polygonal Workspaces: 2-Move Reachable Set}
+%   \begin{figure}
+%\centering
+%\renewcommand{\figwid}{0.4\columnwidth}
+%{\begin{overpic}[width =\figwid]{differentNumSides.pdf}\put(5,100){Workspace}\put(20,100){$\Delta$ configuration space}
+%\end{overpic}
+%}
+%\caption{\label{fig:polygon}{The $\Delta$ configuration space is all possible configurations of $p_2-p_1$. The sets reachable in two moves, called \emph{2-move reachable sets}, are drawn with transparent blue polygons. A polygon with $n$ sides has $n$ 2-move reachable sets, but if $n$ is even and the polygon is regular, half the reachable sets overlap. If $\Delta g$ is in the 2-move reachable sets, we can achieve the required relative position in two moves. If $\Delta g$ is not in the 2-move reachable set, we define a temporary goal $\Delta g_c$ (the closest point on the 2-move reachable set to $\Delta g$) and apply two moves to achieve $\Delta g_c$. We repeat this process until the relative goal position is achieved.
+%%Workspace and $\Delta$ configuration spaces for different polygonal workspaces and their representative $\Delta$ configuration spaces and reachable sets. As the number of sides in the polygon increases, the total area of the $\Delta$ configuration space is four times of the workspace.
+%}
+%\vspace{-1em}
+%}
+%\end{figure}
+%
+%
+%
+%\begin{figure}
+%\centering
+%\begin{overpic}[width=0.32\columnwidth]{twoRobotRegionH.pdf}\end{overpic}
+%\begin{overpic}[width=0.32\columnwidth]{twoRobotRegionV.pdf}\end{overpic}
+%\begin{overpic}[width=0.32\columnwidth]{DeltaConfigSquare.pdf}\end{overpic}
+%\caption{\label{fig:TwoRegions}
+%Boundary interaction is used to change the relative positions of the particles. Each particle gets the same control input. 
+%(left) If particle 2 contacts the bottom wall before particle 1 reaches a wall, particle 2 can reach anywhere along the green line, and  particle 1 can move to anywhere in the shaded area. 
+%(middle) Similarly, if particle 2 contacts the right wall before particle 1 reaches a wall, particle 2 can reach anywhere along the green line, and then particle 1 can move to anywhere in the shaded area. 
+%(right) The 2-move reachable sets in the $\Delta$ configuration space is shown.
+%}
+%\end{figure}
+%
+%\begin{figure*}
+%\centering
+%\renewcommand{\figwid}{0.33\columnwidth}
+%\begin{overpic}[width =\figwid]{anypolygon1.pdf}\put(12,-3){\small{Case 1: $s_1$ does not contact boundary}}\put(28,39){$s_2$}\put(63,50){$s_1$}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{anypolygon2.pdf}\put(20,-3){\small{Case 2: $s_1$ contacts boundary}}\put(20,40){$s_2$}\put(55,58){$s_1$}
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{anypolygon3.pdf}\put(-6,-3){\small{Polygon generated by first contacts along $\overline{ p_i p_{i+1}}$ }}
+%\end{overpic}
+%\caption{\label{fig:polygonAlg}{ Steps to generate  the 2-move reachable set when  one particle collides with edge $\overline{ p_i p_{i+1}}$ of a convex polygonal workspace.}
+%\vspace{-1em}
+%}
+%\end{figure*}
+% Figure \ref{fig:polygon} shows six workspaces, their $\Delta$ configuration spaces, and the 2-move reachable sets that correspond to representative initial conditions.
+% Figure \ref{fig:TwoRegions} highlights the construction of the 2-move reachable sets for a square workspace. There are four 2-move reachable sets, but the horizontal (and vertical) reachable sets are equivalent in the $\Delta$ configuration space so we can plan in this space and choose between the two options to minimize the total distance.
+% % The \emph{2-move reachable set} is the locus of points in the $\Delta$ configuration space corresponding to any two-move sequence where the first move brings one particle into contact with the boundary, and the second move translates the second particle without moving the first. 
+%Algorithm \ref{alg:polygonReachbale} computes the 2-move reachable set for any convex workspace.
+%The set is constructed by considering each edge of the workspace. We name each vertex as $p_i$ where $1\leq i \leq n$.
+%  If one particle contacts edge $\overline{ p_i p_{i+1}}$ before the other (one particle will always contact before the other unless the particles are parallel to the wall), the corresponding 2-move reachable set is a polygon, constructed in lines 2-13 of Alg.~\ref{alg:polygonReachbale}. The union of these polygons for all $n$ sides is the 2-move reachable set of $\Delta$ configurations.
+%Figure~\ref{fig:polygonAlg} illustrates the procedure to construct the  2-move reachable set generated by collisions with the $\overline{ p_i p_{i+1}}$ edge.
+%% 
+% \begin{algorithm}[htb]
+%\caption{ { \sc ReachableSetPolygon}($s_1,s_2,g_1,g_2, P$)}\label{alg:polygonReachbale}
+%\begin{algorithmic}[1]
+%%\scriptsize
+%\Require knowledge of starting $(s_1,s_2)$ and goal $(g_1,g_2)$ positions of  two particles. 
+%$P$ is a list of the vertices of a convex polygon. %RSet contains all the reachable polygons.
+%\State $R_{\textrm{SET}\gets \{\}}$
+%\For {$p_i$ in $P$}
+%\State $p_{i}' \gets s_1 + s_2 - p_i$
+%\State $p_{i+1}' \gets s_1 + s_2 - p_{i+1}$
+%\State $L \gets \overline{ p_i' p_{i+1}'}$ \Comment{line $(p_{i}', p_{i+1}')$}
+%\State $l_i, l_{i+1} \gets $ intersections of $L$ and polygon $P$
+%\If {$p_{i}'$ not inside polygon $P$}
+%\State $p_{i}' \gets l_i$
+%\EndIf
+%\If {$p_{i+1}'$ not inside polygon $P$}
+%\State $p_{i+1}' \gets l_{i+1}$
+%\EndIf
+%%\State $D \gets$ All vertices $\in [ l_i , l_{i+1} ] $
+%\State $D \gets$ $s_2 - s_1 -([l_i, v_{\textrm{min}}, ..., p_i ] -p_i' $,
+%
+%$[p_{i+1} , p_{i+2}, ... , v_{\textrm{max}}, l_{i+1}] - p_{i+1}')$
+%%\State $R_{\textrm{SET}} \gets$ Append (polygon ($s_2 - (s_1 +d_i)$),$R_{\textrm{SET}}$ )
+%\State $R_{\textrm{SET}}$ $\gets$ Append polygon $D$ to $R_{\textrm{SET}}$
+%\EndFor
+%\State Return $R_{\textrm{SET}}$
+%\end{algorithmic}
+%\end{algorithm}
+%%\todo{latex line over the top of two vertices}
+%
+%
+%
+% 
+%\subsection{Circular Workspaces: 2-Move Reachable Set}
+%
+%
+%% Fig.~\ref{fig:shapeControlMathematica1} shows a Mathematica implementation of the algorithm, and is useful as a visual reference for the following description.
+%\begin{figure}
+%\centering
+%\begin{overpic}[width=\columnwidth]{reachableSetCircle.pdf}\end{overpic}
+%\vspace{-1em}
+%\caption{\label{fig:regionMove}
+%% the set of points where the red particle is the first to contact the boundary are drawn with a red arc. The  set of points where the blue particle is the first to contact the boundary are drawn with a blue arc. 
+%Left top: The possible first contact points for the blue and red particles are shown with blue and red arcs. 
+%Left bottom: if the blue particle touches the wall at $\psi_{\min}$ (blue square) the other particle (red square) can move anywhere in the red region. 
+%Right bottom: if the blue particle touches the wall at $\psi = \frac{17 \pi}{10}$ (blue square) the other particle (red square) can move anywhere in the green region. 
+%Right: The $\Delta$ configuration space for the corresponding starting positions of the particles is shown. 
+%The possible 2-move reachable sets before contact are shown in the $\Delta$ configuration as a blue region.
+% If the blue particle contacts the boundary at $\psi_{\min}$, the reachable $\Delta$ configuration is the red set, or the green set if $\psi = \frac{17 \pi}{10}$.}
+%\end{figure}
+%
+%To compute the 2-move reachable set for a circular workspace, first consider all possible first contact locations.
+% The set of boundary points that a particle can touch before the  other particle  touches are two arcs from $\psi_{\min}$ to $\psi_{\max}$  and from $\pi+ \psi_{\min}$ to $\pi+ \psi_{\max}$:
+% \begin{align}\label{eq:psiMinMax}
+%%  \psi \in [\psi_{\min}, \psi_{\max}]= \theta + \Big[\sin^{-1}\frac{d_{12}}{2r} - \frac{\pi}{2},  \frac{\pi}{2} -\sin^{-1}\frac{d_{12}}{2r} \Big],\\
+%\scalebox{.9}{$   \psi \in [\psi_{\min}, \psi_{\max}]= \theta \!+  \left[ \sin^{-1} \left(\frac{d_{12}}{2r}  \right)- \frac{\pi}{2},  \frac{\pi}{2} -\sin^{-1} \left(\frac{d_{12}}{2r} \right) \right]\!\!,$}
+%% \psi \in [\psi_{\min}, \psi_{\max}]= \theta + \Big[\frac{\sin^{-1}{d_{12}}}{2r} - \frac{\pi}{2},  \frac{\pi}{2} -\frac{\sin^{-1}{d_{12}}}{2r} \Big],
+%\end{align}
+%where $d_{12}= ||s_1 - s_2||$, $r$ is the radius of the workspace,
+%and the angle between two particles is $\theta = \arctan(\frac{p_1.x-p_2.x}{p_1.y - p_2.y})$. 
+% 
+% 
+%
+%
+%A circle has an infinite number of sides, thus infinite reachable sets. However, the 2-move reachable set can be parameterized by the angle of first contact location $\psi$, as shown in Fig.~\ref{fig:regionMove}.
+%
+%Each $\psi$ value generates a 2-move reachable set that is a chord of the disk, with interior angle $\gamma$ parameterized by $\psi$:
+%\begin{align}\label{eq:gamma}
+%\gamma(\psi) &= \cos^{-1} \Big(1-\frac{d_\perp(\psi)}{r} \Big), \textrm{ where:}\\ \label{eq:dprep}
+%d_\perp(\psi)&= 2 ||s_1.p_\psi(\psi) - s_2.p_\psi(\psi)|| \textrm{ and} \\ \label{eq:ppsi}
+%p_\psi(\psi) &= r[\cos(\psi ), \sin(\psi )].
+%\end{align} 
+%The 2-move reachable sets with $\pi$ difference in $\psi$ value are equivalent in the  $\Delta$ configuration space. 
+%%immobilize the particle closest to a wall. 
+%The reachable $\Delta$ configuration set for any first contact point defined by $\psi$ is the area under a chord from angle $\psi- \frac{\gamma(\psi)}{2}$ to $\psi+ \frac{\gamma(\psi)}{2}$, for a circle of radius $r$ centered at $c = r(\cos(\psi-\pi), \sin(\psi-\pi))$. Two such chords are drawn in red and green in Fig.~\ref{fig:regionMove}.
+%
+%The equations for the four lines outlining the union of  two-move reachable sets are as follows:
+%\begin{align}\label{eq:circlereachable}
+%l_1 =  r \Big(&\cos\psi_{\min}- \cos(\gamma + \psi_{\min} )\\ \nonumber
+% + &\sin\psi_{\min}- \sin(\gamma + \psi_{\min})\Big) &  0<\gamma< \gamma(\psi_{\min}),\\ \nonumber
+%l_2 =  r \Big(&\cos\psi_{\max}- \cos(\gamma + \psi_{\max})\\ \nonumber
+% + &\sin\psi_{\max}- \sin(\gamma + \psi_{\max})\Big) &  \gamma(\psi_{\max})<\gamma< 0,\\  \nonumber
+%l_3 =  r \Big(&\cos\psi- \cos( \psi+\gamma(\psi) )\\ \nonumber
+%+ & \sin\psi-\sin( \psi+ \gamma(\psi))\Big) &  \psi_{\min}<\psi< \psi_{\max},\\ \nonumber
+%l_4 =  r \Big(&\cos\psi- \cos( \psi-\gamma(\psi) )\\ \nonumber
+%+ &  \sin\psi- \sin( \psi- \gamma(\psi))\Big) &  \psi_{\min}<\psi< \psi_{\max}. \nonumber
+%\end{align}
+%We combine these boundaries to compute the 2-move reachable set summarized in Alg.~\ref{alg:circularReachbale}.
+%The  motion-planner finds a $\psi$ that would enable us to reach $\Delta g_c$, the nearest point in the 2-move reachable set to $\Delta g$. %Eq.~\eqref{eq:ifinchord} checks if an arbitrary point $p$, is in the reachable set corresponding to $\psi$.
+%We first check if $\Delta g_c$ is in the $\Delta$ configuration space chords defined by either $\psi_{\min}$ or $\psi_{\max}$ using the following two tests: 
+%
+%\begin{align}\label{eq:ifinchord}
+%&(\Delta g_c.x - c.x)^2 + (\Delta g_c.y - c.y)^2  > r^2 \textrm{     \textbf{and}}\\ \nonumber
+% &( c.x-\Delta g_c.x ) \cos\psi + ( c.y-\Delta g_c.y) \sin\psi > r\cos\gamma.
+%\end{align}
+%
+%%Here $c$ is the coordinate of the workspace center and $r$ is the radius of the workspace.
+%%We first check if $\Delta g_c$ is achievable with $\psi_{min}$ and $\psi_{max}$.
+% If $\Delta g_c$ is not in either chord, we draw a line from $\Delta g_c$ to the current relative position, $\Delta p$. This line is a chord of the circle centered at $c$. The $\psi$ to this chord obeys:
+%  \begin{equation}
+% \psi = \tan^{-1}\Big(\frac{\Delta p.x - \Delta g_c.x}{\Delta p.y - \Delta g_c.y} \Big).
+% \end{equation}
+% 
+%The particles achieve $\Delta g_c$ in two moves. The first move causes one particle to touch the wall at $p_\psi$, \eqref{eq:ppsi}. The second move achieves the required relative position.
+% 
+%\begin{algorithm}[htb]
+%\caption{ { \sc ReachableSetCircle}($s_1,s_2,g_1,g_2$)}\label{alg:circularReachbale}
+%\begin{algorithmic}[1]
+%%\scriptsize
+%\Require knowledge of starting $(s_1,s_2)$ and goal $(g_1,g_2)$ positions of  two particles. 
+%%\State $\theta = \arctan(\frac{p_1.x-p_2.x}{p_1.y - p_2.y})$
+%\State Calculate $\psi_{\min}$ and $\psi_{\max}$ \Comment use \eqref{eq:psiMinMax}
+%\State Calculate $\gamma(\psi)$ \Comment use \eqref{eq:gamma}
+%\State Calculate $l_1, l_2, l_3, l_4$ \Comment use \eqref{eq:circlereachable} 
+%\State Return the union of ($l_1, l_2, l_3, l_4$)
+%\end{algorithmic}
+%\end{algorithm}
 
-$[p_{i+1} , p_{i+2}, ... , v_{\textrm{max}}, l_{i+1}] - p_{i+1}')$
-%\State $R_{\textrm{SET}} \gets$ Append (polygon ($s_2 - (s_1 +d_i)$),$R_{\textrm{SET}}$ )
-\State $R_{\textrm{SET}}$ $\gets$ Append polygon $D$ to $R_{\textrm{SET}}$
-\EndFor
-\State Return $R_{\textrm{SET}}$
-\end{algorithmic}
-\end{algorithm}
-%\todo{latex line over the top of two vertices}
 
-
-
- 
-\subsection{Circular Workspaces: 2-Move Reachable Set}
-
-
-% Fig.~\ref{fig:shapeControlMathematica1} shows a Mathematica implementation of the algorithm, and is useful as a visual reference for the following description.
-\begin{figure}
-\centering
-\begin{overpic}[width=\columnwidth]{reachableSetCircle.pdf}\end{overpic}
-\vspace{-1em}
-\caption{\label{fig:regionMove}
-% the set of points where the red particle is the first to contact the boundary are drawn with a red arc. The  set of points where the blue particle is the first to contact the boundary are drawn with a blue arc. 
-Left top: The possible first contact points for the blue and red particles are shown with blue and red arcs. 
-Left bottom: if the blue particle touches the wall at $\psi_{\min}$ (blue square) the other particle (red square) can move anywhere in the red region. 
-Right bottom: if the blue particle touches the wall at $\psi = \frac{17 \pi}{10}$ (blue square) the other particle (red square) can move anywhere in the green region. 
-Right: The $\Delta$ configuration space for the corresponding starting positions of the particles is shown. 
-The possible 2-move reachable sets before contact are shown in the $\Delta$ configuration as a blue region.
- If the blue particle contacts the boundary at $\psi_{\min}$, the reachable $\Delta$ configuration is the red set, or the green set if $\psi = \frac{17 \pi}{10}$.}
-\end{figure}
-
-To compute the 2-move reachable set for a circular workspace, first consider all possible first contact locations.
- The set of boundary points that a particle can touch before the  other particle  touches are two arcs from $\psi_{\min}$ to $\psi_{\max}$  and from $\pi+ \psi_{\min}$ to $\pi+ \psi_{\max}$:
- \begin{align}\label{eq:psiMinMax}
-%  \psi \in [\psi_{\min}, \psi_{\max}]= \theta + \Big[\sin^{-1}\frac{d_{12}}{2r} - \frac{\pi}{2},  \frac{\pi}{2} -\sin^{-1}\frac{d_{12}}{2r} \Big],\\
-\scalebox{.9}{$   \psi \in [\psi_{\min}, \psi_{\max}]= \theta \!+  \left[ \sin^{-1} \left(\frac{d_{12}}{2r}  \right)- \frac{\pi}{2},  \frac{\pi}{2} -\sin^{-1} \left(\frac{d_{12}}{2r} \right) \right]\!\!,$}
-% \psi \in [\psi_{\min}, \psi_{\max}]= \theta + \Big[\frac{\sin^{-1}{d_{12}}}{2r} - \frac{\pi}{2},  \frac{\pi}{2} -\frac{\sin^{-1}{d_{12}}}{2r} \Big],
-\end{align}
-where $d_{12}= ||s_1 - s_2||$, $r$ is the radius of the workspace,
-and the angle between two particles is $\theta = \arctan(\frac{p_1.x-p_2.x}{p_1.y - p_2.y})$. 
- 
- 
-
-
-A circle has an infinite number of sides, thus infinite reachable sets. However, the 2-move reachable set can be parameterized by the angle of first contact location $\psi$, as shown in Fig.~\ref{fig:regionMove}.
-
-Each $\psi$ value generates a 2-move reachable set that is a chord of the disk, with interior angle $\gamma$ parameterized by $\psi$:
-\begin{align}\label{eq:gamma}
-\gamma(\psi) &= \cos^{-1} \Big(1-\frac{d_\perp(\psi)}{r} \Big), \textrm{ where:}\\ \label{eq:dprep}
-d_\perp(\psi)&= 2 ||s_1.p_\psi(\psi) - s_2.p_\psi(\psi)||,\\ \label{eq:ppsi}
-p_\psi(\psi) &= r[\cos(\psi ), \sin(\psi )].
-\end{align} 
-The 2-move reachable sets with $\pi$ difference in $\psi$ value are equivalent in the  $\Delta$ configuration space. 
-%immobilize the particle closest to a wall. 
-The reachable $\Delta$ configuration set for any first contact point defined by $\psi$ is the area under a chord from angle $\psi- \frac{\gamma(\psi)}{2}$ to $\psi+ \frac{\gamma(\psi)}{2}$, for a circle of radius $r$ centered at $c = r(\cos(\psi-\pi), \sin(\psi-\pi))$. Two such chords are drawn in red and green in Fig.~\ref{fig:regionMove}.
-
-The equations for the four lines outlining the union of  two-move reachable sets are as follows:
-\begin{align}\label{eq:circlereachable}
-l_1 =  r \Big(&\cos\psi_{\min}- \cos(\gamma + \psi_{\min} )\\ \nonumber
- + &\sin\psi_{\min}- \sin(\gamma + \psi_{\min})\Big) &  0<\gamma< \gamma(\psi_{\min}),\\ \nonumber
-l_2 =  r \Big(&\cos\psi_{\max}- \cos(\gamma + \psi_{\max})\\ \nonumber
- + &\sin\psi_{\max}- \sin(\gamma + \psi_{\max})\Big) &  \gamma(\psi_{\max})<\gamma< 0,\\  \nonumber
-l_3 =  r \Big(&\cos\psi- \cos( \psi+\gamma(\psi) )\\ \nonumber
-+ & \sin\psi-\sin( \psi+ \gamma(\psi))\Big) &  \psi_{\min}<\psi< \psi_{\max},\\ \nonumber
-l_4 =  r \Big(&\cos\psi- \cos( \psi-\gamma(\psi) )\\ \nonumber
-+ &  \sin\psi- \sin( \psi- \gamma(\psi))\Big) &  \psi_{\min}<\psi< \psi_{\max}. \nonumber
-\end{align}
-We combine these boundaries to compute the 2-move reachable set summarized in Alg.~\ref{alg:circularReachbale}.
-The  motion-planner finds a $\psi$ that would enable us to reach $\Delta g_c$, the nearest point in the 2-move reachable set to $\Delta g$. %Eq.~\eqref{eq:ifinchord} checks if an arbitrary point $p$, is in the reachable set corresponding to $\psi$.
-We first check if $\Delta g_c$ is in the $\Delta$ configuration space chords defined by either $\psi_{\min}$ or $\psi_{\max}$ using the following two tests: 
-
-\begin{align}\label{eq:ifinchord}
-&(\Delta g_c.x - c.x)^2 + (\Delta g_c.y - c.y)^2  > r^2 \textrm{     \textbf{and}}\\ \nonumber
- &( c.x-\Delta g_c.x ) \cos\psi + ( c.y-\Delta g_c.y) \sin\psi > r\cos\gamma.
-\end{align}
-
-%Here $c$ is the coordinate of the workspace center and $r$ is the radius of the workspace.
-%We first check if $\Delta g_c$ is achievable with $\psi_{min}$ and $\psi_{max}$.
- If $\Delta g_c$ is not in either chord, we draw a line from $\Delta g_c$ to the current relative position, $\Delta p$. This line is a chord of the circle centered at $c$. The $\psi$ to this chord obeys:
-  \begin{equation}
- \psi = \tan^{-1}\Big(\frac{\Delta p.x - \Delta g_c.x}{\Delta p.y - \Delta g_c.y} \Big).
- \end{equation}
- 
-The particles achieve $\Delta g_c$ in two moves. The first move causes one particle to touch the wall at $p_\psi$, \eqref{eq:ppsi}. The second move achieves the required relative position.
- 
-\begin{algorithm}[htb]
-\caption{ { \sc ReachableSetCircle}($s_1,s_2,g_1,g_2$)}\label{alg:circularReachbale}
-\begin{algorithmic}[1]
-%\scriptsize
-\Require knowledge of starting $(s_1,s_2)$ and goal $(g_1,g_2)$ positions of  two particles. 
-%\State $\theta = \arctan(\frac{p_1.x-p_2.x}{p_1.y - p_2.y})$
-\State Calculate $\psi_{\min}$ and $\psi_{\max}$ \Comment use \eqref{eq:psiMinMax}
-\State Calculate $\gamma(\psi)$ \Comment use \eqref{eq:gamma}
-\State Calculate $l_1, l_2, l_3, l_4$ \Comment use \eqref{eq:circlereachable} 
-\State Return the union of ($l_1, l_2, l_3, l_4$)
-\end{algorithmic}
-\end{algorithm}
-
-
-
-
-
-
-
-
-\subsection{3D workspaces: Cylinders and Prisms}
-
-\begin{figure}
-\centering
-\begin{overpic}[width=0.95\columnwidth]{zaxis.pdf}\end{overpic}
-\caption{\label{fig:zaxis}
-Illustration on how boundary contacts enable 3D positioning. Once one particle contacts a boundary, the other particle's 2-move reachable set is a prism formed by extending the 2D 2-move reachable set in the $\pm z$ direction.
-} %\vspace{-1em}
-\end{figure}
-
-Extending path planning to 3D is possible only if the two particles do not initially have the same $x$ and $y$ positions.
-For ease of analysis, we assume the workspace boundaries extend in the $\pm z$ direction to form either right cylinders or right prisms.
-If the 3D projection is at a different angle, redefine the 2D workspace as a region perpendicular to the projection.
- First, we move the closest particle to the boundary, which prevents its $z$-coordinate from changing.  
- We next apply actuation in either the $\pm z$ direction to achieve the desired $\Delta z$.
- Then the particles are actuated away from the boundary and to the appropriate $z$ positions.
- Path planning continues using Alg.~\ref{alg:optimalAlg} to position the particles to the desired $x$ and $y$ positions. 
- As an example, consider Fig.~\ref{fig:zaxis} which shows a cylindrical workspace.
- The blue particle starts in the blue disk and the red particle starts in the red disk. 
- The two candidate shortest-length paths that touch the wall are shown with parallel arrows. 
-Each arrow will cause one of the particles to touch the wall, enabling the other particle to move freely in the  $z$-axis to achieve the required relative position.
-This can be extended to other 3D workspaces if the workspace can be locally approximated as a 3D prism or cylinder. Other workspaces may be better handled by other path planners, such as \cite{AaronManipulation2013}, which used  collisions with  protrusions of the workspace to rearrange particles.
+%
+%\subsection{3D workspaces: Cylinders and Prisms}
+%
+%\begin{figure}
+%\centering
+%\begin{overpic}[width=0.95\columnwidth]{zaxis.pdf}\end{overpic}
+%\caption{\label{fig:zaxis}
+%Illustration on how boundary contacts enable 3D positioning. Once one particle contacts a boundary, the other particle's 2-move reachable set is a prism formed by extending the 2D 2-move reachable set in the $\pm z$ direction.
+%} %\vspace{-1em}
+%\end{figure}
+%
+%Extending path planning to 3D is possible only if the two particles do not initially have the same $x$ and $y$ positions.
+%For ease of analysis, we assume the workspace boundaries extend in the $\pm z$ direction to form either right cylinders or right prisms.
+%If the 3D projection is at a different angle, redefine the 2D workspace as a region perpendicular to the projection.
+% First, we move the closest particle to the boundary, which prevents its $z$-coordinate from changing.  
+% We next apply actuation in either the $\pm z$ direction to achieve the desired $\Delta z$.
+% Then the particles are actuated away from the boundary and to the appropriate $z$ positions.
+% Path planning continues using Alg.~\ref{alg:optimalAlg} to position the particles to the desired $x$ and $y$ positions. 
+% As an example, consider Fig.~\ref{fig:zaxis} which shows a cylindrical workspace.
+% The blue particle starts in the blue disk and the red particle starts in the red disk. 
+% The two candidate shortest-length paths that touch the wall are shown with parallel arrows. 
+%Each arrow will cause one of the particles to touch the wall, enabling the other particle to move freely in the  $z$-axis to achieve the required relative position.
+%This can be extended to other 3D workspaces if the workspace can be locally approximated as a 3D prism or cylinder. Other workspaces may be better handled by other path planners, such as \cite{AaronManipulation2013}, which used  collisions with  protrusions of the workspace to rearrange particles.
 
 
 
@@ -657,11 +645,7 @@ This can be extended to other 3D workspaces if the workspace can be locally appr
 \begin{overpic}[width=0.3\columnwidth]{finalMove.pdf}\end{overpic}
 \caption{\label{fig:reachableSet}
 Frames from reconfiguring two particles. 
-Top six images show a polygonal workspace and the corresponding $\Delta$ configuration space with its 2-move reachable sets. 
-Bottom six images show a disk-shaped workspace and the corresponding $\Delta$ configuration space with its 2-move reachable sets. 
-For each the move 1 and 3 are simple translations of both particles and so the reachable sets do not change.
-The reachable set morphs during move 2 because one particle is held stationary by the boundary. 
-See multimedia attachment for animations of each.
+Top six images show a polygonal workspace and the bottom six images show a disk-shaped workspace.
 }
 \end{figure*}
 
@@ -710,7 +694,7 @@ The worst-case path length occurs when particles must swap antipodes. This can n
 \vspace{-1em}
 }
 \end{figure}
-Algorithm \ref{alg:optimalAlg}  was implemented in Mathematica using particles with zero radius. Figure \ref{fig:reachableSet} shows frames of the algorithm in two representative workspaces, square and disk, with two arbitrary starting and goal configurations.
+The algorithm developed based on the theory was implemented in Mathematica using particles with zero radius. Figure \ref{fig:reachableSet} shows frames of the algorithm in two representative workspaces, square and disk, with two arbitrary starting and goal configurations.
 %An online interactive demonstration and source code of the algorithm are available at \cite{Shahrokhi2015mathematicaParticle}.
 %  Fig.~\ref{fig:shapeControlMathematica1}  shows  an implementation of this algorithm with robot initial positions represented by hollow squares and final positions by circles. 
  %Dashed lines show the shortest route if robots could be controlled independently, while solid lines show the optimal shortest  path using uniform inputs.
@@ -738,7 +722,7 @@ Frames showing particle positions before and after control inputs. Top row: smal
 } \vspace{-1em}
 \end{figure*}
 
-To demonstrate Alg.~\ref{alg:optimalAlg} experimentally, we performed several tests.
+To demonstrate the developed algorithm experimentally, several tests were performed.
 Each used the same magnetic setup shown in Fig.~\ref{fig:IntroPic}.
 % The figure might need to be referenced 
  Two different intestine models were employed, the first a 3D-printed cross-section representation of a small intestine, and the second a cross-section of a bovine stomach.
@@ -747,21 +731,20 @@ Each used the same magnetic setup shown in Fig.~\ref{fig:IntroPic}.
  
  The magnetic manipulation system has two pairs of electromagnetic coils, each with iron cores at their centers, and arranged orthogonal to each other. The iron core at the center of each coil concentrates the magnetic field towards the workspace. An Arduino and four SyRen regenerative motor drivers were used for control inputs to the coils. Finally, a FOculus F0134SB 659 x 494 pixel camera was attached to the top of the system, focusing on the workspace which was backlit by a $\SI{15}{\watt}$ LED light strip. 
  
-To obtain experimental data, the test samples (the phantom intestine model and the bovine cross section) were placed in laser-cut acrylic discs and then immersed in corn syrup. Corn syrup was used to increase the viscosity to 12000 cP for the experiments. Spherical $\SI{1}{\milli\metre}$ magnets (supermagnetman \#SP0100-50) were used as our particles. Our experimental setup did not perfectly implement the system dynamics in \eqref{eq:swarmDynamicsAndFric}. In particular, the magnetic field in this setup is only approximately uniform. The magnetic force varies in both magnitude and orientation. As shown in the video attachment, this non-uniformity causes the particle closer to the coil to move faster than the other particle. This phenomenon makes it easier to increase particle separation than to decrease separation, but this can be compensated because boundary collisions easily decrease the separation. Also, magnetic forces are not exactly parallel, but point toward the center of the activated coil. Algorithm~\ref{alg:optimalAlg} still works despite these non-uniformities, but sometimes requires additional iterations.
+To obtain experimental data, the test samples (the phantom intestine model and the bovine cross section) were placed in laser-cut acrylic discs and then immersed in corn syrup. Corn syrup was used to increase the viscosity to 12000 cP for the experiments. Spherical $\SI{1}{\milli\metre}$ magnets (supermagnetman \#SP0100-50) were used as the test particles. Our experimental setup did not perfectly implement the system dynamics in \eqref{eq:swarmDynamicsAndFric}. In particular, the magnetic field in this setup is only approximately uniform. The magnetic force varies in both magnitude and orientation. This non-uniformity causes the particle closer to the coil to move faster than the other particle. This phenomenon makes it easier to increase particle separation than to decrease separation, but this can be compensated because boundary collisions easily decrease the separation. Also, magnetic forces are not exactly parallel, but point toward the center of the activated coil. The developed algorithm still works despite these non-uniformities, but sometimes requires additional iterations.
  
 
 
 \subsection{Intestine Phantom Model}
 
-The intestine phantom model was used first and was made to mimic the geometry of an intestine and its villi. The model consists of a circular ring with an outer diameter of $\SI{50}{\milli\metre}$, an inner diameter of $\SI{46}{\milli\metre}$, and 60 $\SI{2}{\milli\metre}$ long protrusions on its inner surface cut out of $\SI{6}{\milli\metre}$ thick acrylic to model the geometry of intestinal villi. Figure \ref{fig:story} top row shows an experiment. Starting and ending positions were printed beneath the workspace on transparency film. Our algorithm successfully delivered the particles to goal positions in 10 out of 10 trials.
+The intestine phantom model was used first and was made to mimic the geometry of an intestine and its villi. The model consists of a circular ring with an outer diameter of $\SI{50}{\milli\metre}$, an inner diameter of $\SI{46}{\milli\metre}$, and 60 $\SI{2}{\milli\metre}$ long protrusions on its inner surface cut out of $\SI{6}{\milli\metre}$ thick acrylic to model the geometry of intestinal villi. Figure \ref{fig:story} top row shows an experiment. Starting and ending positions were printed beneath the workspace on transparency film. The developed algorithm successfully delivered the particles to goal positions in 10 out of 10 trials.
 
 
 
 \subsection{Bovine Stomach Cross-section}
 
 
-Strips of cow stomach approximately $\SI{5}{\milli\metre}$ thick were cut and sewn to acrylic cylinder and then glued to an acrylic substrate using cyanoacrylate (superglue). This assembly was then filled with corn syrup. The experiment is shown in Fig.~\ref{fig:story} bottom row. Our algorithm successfully delivered the particles to goal positions in 5 out of 5 trials.
-A video showing one trial of this experiment is available in the supplementary materials. 
+Strips of cow stomach approximately $\SI{5}{\milli\metre}$ thick were cut and sewn to acrylic cylinder and then glued to an acrylic substrate using cyanoacrylate (superglue). This assembly was then filled with corn syrup. The experiment is shown in Fig.~\ref{fig:story} bottom row. The developed algorithm successfully delivered the particles to goal positions in 5 out of 5 trials.
 
 
 %%%%%%%%%%%%%%%
@@ -771,7 +754,6 @@ A video showing one trial of this experiment is available in the supplementary m
 
 This paper presented techniques for controlling the positions of two particles using uniform inputs and non-slip boundary contacts.  
 The paper provided algorithms for precise position control. The algorithms relied on calculating reachable sets in a 2D $\Delta$ configuration space.
-Extending Alg.~\ref{alg:optimalAlg}  to 3D was straightforward, but increased the complexity.
 Hardware experiments illustrated the algorithms in ex vivo and in artificial workspaces that mimic the geometry of biological tissue.
 
 There are several avenues for future work. This paper assumed friction was sufficient to completely stop particles in contact with the boundary. 
