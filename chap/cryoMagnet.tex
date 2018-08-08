@@ -74,12 +74,12 @@ LN2 is cheap (approximately 0.13 USD/Liter) and available in industrial quantiti
 It is non-toxic as gaseous nitrogen composes 78\% of the volume of our atmosphere. However, if large quantities of liquid nitrogen are evaporated, the level of oxygen in the room might decrease. An adapted ventilation system and a low oxygen alarm must be used to prevent anoxia. \par
 % Outline
 This paper presents the design and test of a magnetic manipulator cooled with LN2. 
-A demonstration system is described in \S\ref{sec:System}.
-The motivations and technical difficulties associated with this type of cooling are discussed in \S\ref{sec:CoolingWithLN2}.
-A method to perform inverse magnetic calculations is then explained in \S\ref{sec:invMagnetics}.
- A robot trajectory controller is described in \S\ref{sec:TrajectoryControl}. 
- Next the system singularities are analyzed for 3-DOF control of a permanent magnet in \S\ref{sec:singularities}. 
-  Experimental results are presented and analyzed in \S\ref{Experiment}. The paper concludes with lessons learned in this study.\par
+A demonstration system is described in Section \ref{sec:System}.
+The motivations and technical difficulties associated with this type of cooling are discussed in Section \ref{sec:CoolingWithLN2}.
+A method to perform inverse magnetic calculations is then explained in Section \ref{sec:invMagnetics}.
+ A robot trajectory controller is described in Section \ref{sec:TrajectoryControl}. 
+ Next the system singularities are analyzed for 3-DOF control of a permanent magnet in Section \ref{sec:singularities}. 
+  Experimental results are presented and analyzed in Section \ref{Experiment}. The paper concludes with lessons learned in this study.\par
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{System Presentation}\label{sec:System}
@@ -368,7 +368,7 @@ It is now necessary to define three new vectors:
 \mathbf{\widetilde{B}}_{y(\mathbf{P})}&= \scalebox{.85}{$\setlength\arraycolsep{2pt}
 \begin{bmatrix}
 \widetilde{B}_{1y(\mathbf{P})} & \widetilde{B}_{2y(\mathbf{P})} & \widetilde{B}_{3y(\mathbf{P})} & \widetilde{B}_{4y(\mathbf{P})} & \widetilde{B}_{5y(\mathbf{P})} & \widetilde{B}_{6y(\mathbf{P})}
-\end{bmatrix}$}, and
+\end{bmatrix}$}, \textrm{ and}
 \label{Gy} \\
 %
 \mathbf{\widetilde{B}}_{z(\mathbf{P})}&= \scalebox{.85}{$\setlength\arraycolsep{2pt} \begin{bmatrix}
@@ -557,7 +557,7 @@ This reduces the force and flux density values applied on the robot, but has the
 \end{figure}
 
 
-As explained in \S\ref{sec:TrajectoryControl}, the orientation of the robot can be controlled using two different methods. 
+As explained in Section \ref{sec:TrajectoryControl}, the orientation of the robot can be controlled using two different methods. 
  The first one uses actuation matrix $\mathbf{A_0}$ and allows applying a desired flux density vector $\mathbf{B}$ and a force $\mathbf{F}$ to the robot. 
  The second uses actuation matrix $\mathbf{A_1}$ and allows applying a desired torque $\mathbf{T}$ and a force $\mathbf{F}$ to the robot.
 
@@ -597,8 +597,8 @@ The norm of the total current $N \cdot \mathbf{I}$ needed to produce a force of 
 	\label{waveform}
 \end{figure}
 
-The control of the velocity and orientation of a NdFeB permanent magnet in a 2D plane described in \S\ref{sec:TrajectoryControl} was implemented and tested using the $\mathbf{A_1}$ actuation matrix. As shown in \S\ref{sec:singularities} it is preferable to apply the force along the magnetization axis of the robot ($d$-axis). The program was therefore configured to orient the robot magnetization in the same direction as the applied force. This allows minimizing the value of the force applied along the $q$ axis and therefore improve stability by avoiding current saturations.
-% As shown in \S\ref{sec:singularities} 
+The control of the velocity and orientation of a NdFeB permanent magnet in a 2D plane described in Section \ref{sec:TrajectoryControl} was implemented and tested using the $\mathbf{A_1}$ actuation matrix. As shown in Section \ref{sec:singularities} it is preferable to apply the force along the magnetization axis of the robot ($d$-axis). The program was therefore configured to orient the robot magnetization in the same direction as the applied force. This allows minimizing the value of the force applied along the $q$ axis and therefore improve stability by avoiding current saturations.
+% As shown in Section \ref{sec:singularities} 
 The permanent magnet was cylindrical, with a diameter of 2.5 mm and a length of 10 mm. 
 It was encapsulated in a black shrink tube to facilitate computer vision tracking. 
 The magnet was then attached horizontally on a Styrofoam disk having a diameter of 18 mm and a thickness of 6 mm. 
@@ -606,7 +606,7 @@ Pictures of the robot are shown in Fig.~\ref{Path}.
 
 A robot navigating inside fluid-filled cavities of the human body may be designed to have neutral buoyancy to reduce the amount of force needed. 
 To simulate neutral buoyancy in this 2D control experiment, the magnet-Styrofoam assembly floated at the surface of a water-filled tank. The magnet was able to move freely in the $x$ and $y$ directions as well as rotate around the $z$ axis.\par
-The method from \S\ref{sec:TrajectoryControl} was used with the $\mathbf{A_1}$ actuation matrix from \eqref{A1}.
+The method from Section \ref{sec:TrajectoryControl} was used with the $\mathbf{A_1}$ actuation matrix from \eqref{A1}.
  The trajectory was an ellipse having a major axis of 63 mm and a minor axis of 40 mm.
 
 Test were performed with and without LN2 cooling. The trajectory obtained experimentally without LN2 is presented in Fig.~\ref{Path}. For these plots, the robot followed the trajectory ten times. Trajectories obtained with LN2 cooling are similar. The robot was stable during the navigation, but small deviation from the centerline were observed at several locations. 
