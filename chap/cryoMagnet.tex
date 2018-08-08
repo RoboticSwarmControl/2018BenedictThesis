@@ -224,6 +224,10 @@ Schematic & \includegraphics[height=1.5cm]{Coil1Cold.pdf}   %TODO: add "LN2" tex
 	\label{fig:ComparisonMagnetsDesigns}}
 \end{figure}
 
+\subsection{Scaling Law}
+
+This section uses analytical equations to derive the gradient produced by two concentric electromagnets on their revolution axis (see Fig. \ref{fig:3dView}). The electromagnets have an external radius $R_e$. They have a rectangular $T_z \times T_r$ cross-section. The filling factor $F_{\textrm{Fill}} $ is assumed to be equal to 0.7. LN2 cooled magnets have an additional insulation that has a thickness $T_{\textrm{insul}}$ which reduces the internal bore diameter $D_b$.
+
 \begin{table}[]
 \centering
 \caption{Comparison between EM properties at room temperature (300K) and at LN2 temperature (77K).}
@@ -238,10 +242,6 @@ Max cont. current density & 4.3 A/mm$^2$ & 23 A/mm$^2$ & +435\% \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-\subsection{Scaling Law}
-
-This section uses analytical equations to derive the gradient produced by two concentric electromagnets on their revolution axis (see Fig. \ref{fig:3dView}). The electromagnets have an external radius $R_e$. They have a rectangular $T_z \times T_r$ cross-section. The filling factor $F_{\textrm{Fill}} $ is assumed to be equal to 0.7. LN2 cooled magnets have an additional insulation that has a thickness $T_{\textrm{insul}}$ which reduces the internal bore diameter $D_b$.
 
 The flux density $B_u$ produced by a single current loop can be calculated on its revolution axis using the Biot-Savart law:
 %
@@ -288,7 +288,7 @@ over the volume $V$:
 %
 These equations were implemented in {\sc Matlab} with $T_z = T_r$. The function \texttt{fminsearch} was used to inverse this equation and find the value of $T_z$ that produces the desired gradient $G_e$ for a given $R_e$ and $Z_e$.
 
-Fig. \ref{fig:ScalingLaw} presents simulation results obtained using equations \ref{bloop} to \ref{Pe}. Plot \emph{(a)} graphs the EM winding volume as a function of its external diameter. The blue and red curves present the $T_z$ that produces a gradient of 20 mT/m and 45 mT/m respectively. The value of $T_z$ and therefore the volume of the winding changes along these curves to produce the desired gradient strength.
+Fig. \ref{fig:ScalingLaw} presents simulation results obtained using equations \ref{bloop} to \ref{Pe}. Plot \emph{(a)} graphs the EM winding volume as a function of its external diameter. The red curves correspond to magnetic assemblies able to produce a gradient strength of 20 mT/m at the system center, while the blue curves correspond to magnetic assemblies  able to produce a gradient strength of 45 mT/m at the system center.. The value of $T_z$ and therefore the volume of the winding changes along these curves to produce the desired gradient strength.
 
 Black curves have been added to locate the functioning points for a human-size system. They represent systems that have a 0.7 m bore diameter $D_b$ (similar to the bore diameters of MRI scanners). Dashed lines are plotted for an air cooled magnet while solid lines are for EM cooled with LN2.
 
@@ -309,9 +309,7 @@ Results show that the windings of LN2 cooled systems are always smaller than air
 	\centering
 	\begin{overpic}[width=0.45\columnwidth]{ScalingLaw.eps}
 	\end{overpic}
-	\caption{Plot of the winding volume (a) and power consumption (b) of air-cooled (300K) and LN2-cooled (77K) EMs. 
-	Red curves correspond to magnetic assemblies able to produce a gradient strength of 20 mT/m at the system center.
-	 Blue curves correspond to magnetic assemblies  able to produce a gradient strength of 45 mT/m at the system center.}
+	\caption{Plot of the winding volume (a) and power consumption (b) of air-cooled (300K) and LN2-cooled (77K) EMs.}
 	\label{fig:ScalingLaw}
 \end{figure}
 
@@ -550,9 +548,7 @@ This reduces the force and flux density values applied on the robot, but has the
 \begin{figure}
 	\includegraphics[width=\linewidth]{Conditioning3.eps}
 	\caption{Map of the conditioning of the actuation matrix $\mathbf{A_0}$ for (a) $\theta=0$ and (f) $\theta=\pi/4$. 
-	Map of the norm of the total current needed to produce a force of 100 mN along the $d$ axis (plots b, d, g and i) and along the $q$ axis (plots c, e, h and j). 
-	Plots b, c, d and e are plotted for $\theta=0$ and plots g, h, i and j are plotted for $\theta=\pi/4$.
-	Plots b, c, g and h were calculated using $\mathbf{A_0}$ and plots d, e, i and j were calculated using $\mathbf{A_1}$. }
+	Map of the norm of the total current needed to produce a force of 100 mN along the $d$ axis (b, d, g and i) and along the $q$ axis (c, e, h and j).  }
 	\label{condition}
 \end{figure}
 
@@ -576,7 +572,7 @@ The actuation matrices $\mathbf{A_0}$ and $\mathbf{A_1}$ are functions of the ma
 
 The effect of singularities was studied for a 2D--3DOF control. The magnet is horizontally placed on a flat surface corresponding to the $x$-$y$ plane. The robot is able to move along $x$ and $y$ and rotate around the $z$-axis.
 
-A 4$\times$4 $\mathbf{A_0}$ and a 4$\times$3 $\mathbf{A_1}$ actuation matrices can be calculated for each robot position and angle. The map of the conditioning of the $\mathbf{A_0}$ matrix is shown in Fig.~\ref{condition}(a) and (f). On this figure is also presented the norm of the total current $N \cdot \mathbf{I}$ required to produce a force of 100 mN along the $d$-axis (central-column) and $q$-axis (right-column). Plots for $\theta=0$ and $\theta=\pi/4$ are presented. Results for other angles are shown in the attached video.  
+A 4$\times$4 $\mathbf{A_0}$ and a 4$\times$3 $\mathbf{A_1}$ actuation matrices can be calculated for each robot position and angle. The map of the conditioning of the $\mathbf{A_0}$ matrix is shown in Fig.~\ref{condition}(a) and (f). On this figure is also presented the norm of the total current $N \cdot \mathbf{I}$ required to produce a force of 100 mN along the $d$-axis (central-column) and $q$-axis (right-column). Plots b, c, d and e are plotted for $\theta=0$ and plots g, h, i and j are plotted for $\theta=\pi/4$. Plots b, c, g and h were calculated using $\mathbf{A_0}$ and plots d, e, i and j were calculated using $\mathbf{A_1}$.
 
 For $\theta=0$, $\mathbf{A_0}$ has two singularity lines on the $x$ and $y$ axis. For $\theta=\pi/4$ singularities take a rounded shape and are located on two opposite angles of the workspace. No solution is available when the matrix is singular. The singularities are situated on infinitely thin lines, but the system is ill-conditioned near the singularity lines. A large condition number produces a large magnitude for the $\mathbf{I}$ vector. The capabilities of the power supplies limit the maximum current and when the condition number becomes too large, the current saturates. This saturation decreases control authority over the robot in these regions.\par
 

@@ -49,12 +49,12 @@ Workspace and magnetic setup for an experiment to position particles that receiv
 %\todo{add the picture of magnetic setup}
 
 
-The paper is arranged as follows. 
-After a review of recent related work in Sec.  \ref{sec:RelatedWork},
- %Sec. \ref{subsec:FluidInTank} provides analytical position control results of stable configurations in two canonical workspaces with frictionless walls.  These results are limited in the set of shapes that can be generated.  To extend the range of possible shapes,
-  Sec.  \ref{sec:theory} introduces a  model for boundary interaction and two shortest path results for representative workspaces.   
-An algorithm is developed to arbitrarily position two particles based on the theory, and Section  \ref{sec:simulation} describes its implementation in simulation and  Sec. \ref{sec:expResults} describes hardware experiments, as shown in Fig.~\ref{fig:IntroPic}. 
-The paper ends with directions for future research in Sec.  \ref{sec:conclusion}.
+%The paper is arranged as follows. 
+%After a review of recent related work in Sec.  \ref{sec:RelatedWork},
+% %Sec. \ref{subsec:FluidInTank} provides analytical position control results of stable configurations in two canonical workspaces with frictionless walls.  These results are limited in the set of shapes that can be generated.  To extend the range of possible shapes,
+%  Sec.  \ref{sec:theory} introduces a  model for boundary interaction and two shortest path results for representative workspaces.   
+%An algorithm is developed to arbitrarily position two particles based on the theory, and Section  \ref{sec:simulation} describes its implementation in simulation and  Sec. \ref{sec:expResults} describes hardware experiments, as shown in Fig.~\ref{fig:IntroPic}. 
+%The paper ends with directions for future research in Sec.  \ref{sec:conclusion}.
 
 This paper is an elaboration of preliminary work in a conference paper \cite{shahrokhi2017algorithms} which considered only square workspaces. This work extends the analysis to convex workspaces and also implements the algorithms using a hardware setup inspired by the anatomy of the gastrointestinal tract.
 
@@ -100,8 +100,8 @@ The following sections examine using non-slip boundary contacts to break the sym
  The section begins with a boundary interaction model in subsection \ref{subsec:WallFriction}.
  
 
-For some configurations, the optimal solution can be obtained. 
-Subsections \ref{subsec:square} and \ref{subsec:circular} provide shortest-path results for two representative workspaces, squares and disks.
+%For some configurations, the optimal solution can be obtained. 
+%Subsections \ref{subsec:square} and \ref{subsec:circular} provide shortest-path results for two representative workspaces, squares and disks.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Boundary Interaction Model}\label{subsec:WallFriction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -128,21 +128,21 @@ Subsections \ref{subsec:square} and \ref{subsec:circular} provide shortest-path 
   As in this model, fluid flowing in a pipe has zero velocity along the boundary. Similar mechanical systems exist at larger scales, e.g. all tumblers of a combination lock move uniformly unless obstructed by an obstacle.
 The control problem is to design the control inputs $\mathbf{u}(t)$ to deliver two particles to goal positions.
  
- \subsection{Example: Shortest Path in a Square Workspace}\label{subsec:square}
- Changing the relative positions of particles in any workspace requires making one particle contact the boundary.
- If the goal configuration cannot be reached in one move but can be reached in three moves, the shortest path has a simple solution. The first move, $m_1$, makes one particle contact a wall, $m_2$ adjusts the relative spacing error  to zero, and $m_3$ takes the particles to their final positions. 
-$m_2$ cannot be shortened, so optimization depends on choosing the location where the particle contacts the wall. 
- Since the shortest distance between two points is a straight line, reflecting the goal position across the boundary wall and plotting a straight line gives the optimal contact location, as shown in Fig. \ref{fig:reflection}. 
-  There are four walls, and four candidate solutions, but some candidate solutions may be invalid because a different boundary is hit before the desired first contact position in move $m_1$ (light grey regions) or  invalid because $m_2$ cannot generate the goal relative spacing (dark grey regions).
- %
-\begin{figure}
-\centering
-\begin{overpic}[width=\columnwidth]{Reflection.pdf}\end{overpic}
-\vspace{-2em}
-\caption{\label{fig:reflection}
-The shortest three-move path that reconfigures two particles has the property that the incident angle equals the reflected angle.
-} \vspace{-1em}
-\end{figure}
+% \subsection{Example: Shortest Path in a Square Workspace}\label{subsec:square}
+% Changing the relative positions of particles in any workspace requires making one particle contact the boundary.
+% If the goal configuration cannot be reached in one move but can be reached in three moves, the shortest path has a simple solution. The first move, $m_1$, makes one particle contact a wall, $m_2$ adjusts the relative spacing error  to zero, and $m_3$ takes the particles to their final positions. 
+%$m_2$ cannot be shortened, so optimization depends on choosing the location where the particle contacts the wall. 
+% Since the shortest distance between two points is a straight line, reflecting the goal position across the boundary wall and plotting a straight line gives the optimal contact location, as shown in Fig. \ref{fig:reflection}. 
+%  There are four walls, and four candidate solutions, but some candidate solutions may be invalid because a different boundary is hit before the desired first contact position in move $m_1$ (light grey regions) or  invalid because $m_2$ cannot generate the goal relative spacing (dark grey regions).
+% %
+%\begin{figure}
+%\centering
+%\begin{overpic}[width=\columnwidth]{Reflection.pdf}\end{overpic}
+%\vspace{-2em}
+%\caption{\label{fig:reflection}
+%The shortest three-move path that reconfigures two particles has the property that the incident angle equals the reflected angle.
+%} \vspace{-1em}
+%\end{figure}
 %
 %
 %This optimization result was implemented in previous work using a square workspace \cite{shahrokhi2017algorithms}.
@@ -276,37 +276,37 @@ The shortest three-move path that reconfigures two particles has the property th
 %\end{figure*}
 
  
- \subsection{Shortest Path in Unit Disk that Intersects Circumference}\label{subsec:circular}
-
- The shortest path between two points in the unit disk that intersects the circumference is composed of two straight line segments and has an optimal contact point, as shown in Fig.~\ref{fig:shortestpath}. 
- The problem can be simplified by choosing the coordinate system carefully. The $x$-axis along the line from the circle center to the starting point: $S=(s,0)$ is defined, and so is the point of intersection by the angle $\theta$ from the $x$-axis: $P=(\cos \theta,\sin \theta)$. The final point $E$ is defined by a radius $e$ and angle $\beta$: $E=e(\cos \beta,\sin \beta)$. Then the length of the two line segments is 
- \begin{align}\scalebox{.8}{$
- \sqrt{{ (s-\cos \theta)^2+\sin^2 \theta}} +  \sqrt{(e \cos \beta-\cos \theta)^2+(e \sin \beta-\sin \theta)^2},$}
- \end{align}
- which is minimized by choosing an appropriate $\theta$ value.
- 
-
-\begin{figure}
-\centering
-\renewcommand{\figwid}{\columnwidth}
-{\begin{overpic}[width =\figwid]{shortestpath.pdf}
-\end{overpic}
-}
-\caption{\label{fig:shortestpath}{The shortest path between two points $S$ to $E$ in the unit disk that intersects the circumference. The path length as a function of intersection point, $P= (\cos\theta,\sin\theta)$ is shown at right. }%See \cite{BeckerShortestPath}.}
-%\vspace{-1em}
-}
-\end{figure}
-
- 
- The length of the two line segments as a function of $\theta$ is drawn in the right plot of Fig.~\ref{fig:shortestpath}. There are several simple solutions. If $s$ is 1 or $e$ is 0 or $\beta$ is 0, the optimal angle $\theta^*$ is 0. If $e$ is 1 or $s$ is 0, the optimal angle is $\beta$. Label the origin $O$. 
- The optimal path satisfies the law of reflection off the unit circle, with angle of incidence equal to angle of reflection.
- The angle $\angle{OPS}$ (from the origin to $P$ to $S$) is the same as the angle $\angle{OPE}$ (from the origin to $P$ to $E$). 
- These angles are named $\alpha$. This can be proved by drawing an ellipse whose foci are $S$ and $E$. When the ellipse is tangent to the circle, the point of tangency is $P$. 
-  Since the distance from the origin to $P$ is always 1, three equalities can be set up using the law of sines:
- From triangle $OSP$: $\frac{\sin \alpha}{s}=\frac{\sin(\alpha + \theta)}{1}=\frac{\sin \theta}{||SP||}$, and from triangle $OEP$: $\frac{\sin \alpha}{e}=\frac{\sin(\beta - \theta)}{||EP||}$. If the point $S$ is mirrored about line $\overline{OP}$ and this point is labelled $C$, from triangle $CEO$: $\frac{\sin(\alpha + \theta)}{e}=\frac{\sin(2 \theta - \beta)}{||CE||}$.
- 
- Simplifying this system of equations results in $s=e \csc \theta (s \sin(2 \theta-\beta)+\sin(\beta-\theta))$. Solving this last equation results in a quartic solution that has a closed-form solution with four roots, each of which can be either a clockwise or a counterclockwise rotation $\theta$, depending on the sign of $\beta$, with $-\pi\leq\beta\leq\pi$. Each is evaluated and the solution that results in the shortest length path is selected. %This optimal path satisfies the law of reflection off the unit circle, with angle of incidence equal to angle of reflection. 
- For an interactive Mathematica demonstration of this shortest path, see \cite{BeckerShortestPath}. 
+% \subsection{Shortest Path in Unit Disk that Intersects Circumference}\label{subsec:circular}
+%
+% The shortest path between two points in the unit disk that intersects the circumference is composed of two straight line segments and has an optimal contact point, as shown in Fig.~\ref{fig:shortestpath}. 
+% The problem can be simplified by choosing the coordinate system carefully. The $x$-axis along the line from the circle center to the starting point: $S=(s,0)$ is defined, and so is the point of intersection by the angle $\theta$ from the $x$-axis: $P=(\cos \theta,\sin \theta)$. The final point $E$ is defined by a radius $e$ and angle $\beta$: $E=e(\cos \beta,\sin \beta)$. Then the length of the two line segments is 
+% \begin{align}\scalebox{.8}{$
+% \sqrt{{ (s-\cos \theta)^2+\sin^2 \theta}} +  \sqrt{(e \cos \beta-\cos \theta)^2+(e \sin \beta-\sin \theta)^2},$}
+% \end{align}
+% which is minimized by choosing an appropriate $\theta$ value.
+% 
+%
+%\begin{figure}
+%\centering
+%\renewcommand{\figwid}{\columnwidth}
+%{\begin{overpic}[width =\figwid]{shortestpath.pdf}
+%\end{overpic}
+%}
+%\caption{\label{fig:shortestpath}{The shortest path between two points $S$ to $E$ in the unit disk that intersects the circumference. The path length as a function of intersection point, $P= (\cos\theta,\sin\theta)$ is shown at right. }%See \cite{BeckerShortestPath}.}
+%%\vspace{-1em}
+%}
+%\end{figure}
+%
+% 
+% The length of the two line segments as a function of $\theta$ is drawn in the right plot of Fig.~\ref{fig:shortestpath}. There are several simple solutions. If $s$ is 1 or $e$ is 0 or $\beta$ is 0, the optimal angle $\theta^*$ is 0. If $e$ is 1 or $s$ is 0, the optimal angle is $\beta$. Label the origin $O$. 
+% The optimal path satisfies the law of reflection off the unit circle, with angle of incidence equal to angle of reflection.
+% The angle $\angle{OPS}$ (from the origin to $P$ to $S$) is the same as the angle $\angle{OPE}$ (from the origin to $P$ to $E$). 
+% These angles are named $\alpha$. This can be proved by drawing an ellipse whose foci are $S$ and $E$. When the ellipse is tangent to the circle, the point of tangency is $P$. 
+%  Since the distance from the origin to $P$ is always 1, three equalities can be set up using the law of sines:
+% From triangle $OSP$: $\frac{\sin \alpha}{s}=\frac{\sin(\alpha + \theta)}{1}=\frac{\sin \theta}{||SP||}$, and from triangle $OEP$: $\frac{\sin \alpha}{e}=\frac{\sin(\beta - \theta)}{||EP||}$. If the point $S$ is mirrored about line $\overline{OP}$ and this point is labelled $C$, from triangle $CEO$: $\frac{\sin(\alpha + \theta)}{e}=\frac{\sin(2 \theta - \beta)}{||CE||}$.
+% 
+% Simplifying this system of equations results in $s=e \csc \theta (s \sin(2 \theta-\beta)+\sin(\beta-\theta))$. Solving this last equation results in a quartic solution that has a closed-form solution with four roots, each of which can be either a clockwise or a counterclockwise rotation $\theta$, depending on the sign of $\beta$, with $-\pi\leq\beta\leq\pi$. Each is evaluated and the solution that results in the shortest length path is selected. %This optimal path satisfies the law of reflection off the unit circle, with angle of incidence equal to angle of reflection. 
+% For an interactive Mathematica demonstration of this shortest path, see \cite{BeckerShortestPath}. 
  
 %%%%%%%%%%%%%%%
 
@@ -592,119 +592,119 @@ The shortest three-move path that reconfigures two particles has the property th
 
 
 %%%%%%%%%%%%%%%
-
-\section{Simulation}\label{sec:simulation}
-
-
-%Two simulations were implemented using non-slip contact walls for position control.  The first controls the position of two robots, the second controls the position of $n$ robots.  
-\begin{figure*}
-\begin{overpic}[width=0.3\columnwidth]{regionMove1.pdf}\put(55.5,26){\begin{turn}{94} 
-{\begin{tikzpicture}[thick]
-\draw [red,  - , dotted      ] (1,14.0) -- (0,14.0);
-\end{tikzpicture}}\end{turn}}\end{overpic}
-\begin{overpic}[width=0.3\columnwidth]{regionMove2.pdf}\put(55.5,26){\begin{turn}{94} 
-{\begin{tikzpicture}[thick]
-\draw [red,   -  , dotted     ] (1,14.0) -- (0,14.0);
-\end{tikzpicture}}\end{turn}}\end{overpic}
-\begin{overpic}[width=0.3\columnwidth]{regionMove3.pdf}\put(55.5,26){\begin{turn}{94} 
-{\begin{tikzpicture}[thick]
-\draw [red,   -   , dotted     ] (1,14.0) -- (0,14.0);
-\end{tikzpicture}}\end{turn}}\end{overpic}\\
-
-\begin{overpic}[width=0.3\columnwidth]{regionMove4.pdf}\put(55.5,26){\begin{turn}{94} 
-{\begin{tikzpicture}[thick]
-\draw [red,   -  , dotted      ] (1,14.0) -- (0,14.0);
-\end{tikzpicture}}\end{turn}}\end{overpic}
-\begin{overpic}[width=0.3\columnwidth]{regionMove5.pdf}\put(55.5,26){\begin{turn}{94} 
-{\begin{tikzpicture}[thick]
-\draw [red,   -   , dotted     ] (1,14.0) -- (0,14.0);
-\end{tikzpicture}}\end{turn}}\end{overpic}
-\begin{overpic}[width=0.3\columnwidth]{regionMove6.pdf}\end{overpic}\\
-
-\begin{overpic}[width=0.3\columnwidth]{Move1.pdf}\put(55.5,32.5){\begin{turn}{50.5} 
-{\begin{tikzpicture}[thick]
-\draw [red,   -   , dotted    ] (1,14.0) -- (0,14.0);
-\end{tikzpicture}}\end{turn}}\end{overpic}
-\begin{overpic}[width=0.3\columnwidth]{Move2.pdf}\put(55.5,32.5){\begin{turn}{50.5} 
-{\begin{tikzpicture}[thick]
-\draw [red,   -   , dotted     ] (1,14.0) -- (0,14.0);
-\end{tikzpicture}}\end{turn}}\end{overpic}
-\begin{overpic}[width=0.3\columnwidth]{Move3.pdf}\put(55.5,32.5){\begin{turn}{50.5} 
-{\begin{tikzpicture}[thick]
-\draw [red,   -   , dotted    ] (1,14.0) -- (0,14.0);
-\end{tikzpicture}}\end{turn}}\end{overpic}\\
-
-\begin{overpic}[width=0.3\columnwidth]{Move4.pdf}\put(55.5,32.5){\begin{turn}{50.5} 
-{\begin{tikzpicture}[thick]
-\draw [red,   -  , dotted      ] (1,14.0) -- (0,14.0);
-\end{tikzpicture}}\end{turn}}\end{overpic}
-\begin{overpic}[width=0.3\columnwidth]{Move5.pdf}\put(55.5,32.5){\begin{turn}{50.5} 
-{\begin{tikzpicture}[thick]
-\draw [red,   -   , dotted     ] (1,14.0) -- (0,14.0);
-\end{tikzpicture}}\end{turn}}\end{overpic}
-\begin{overpic}[width=0.3\columnwidth]{finalMove.pdf}\end{overpic}
-\caption{\label{fig:reachableSet}
-Frames from reconfiguring two particles. 
-Top six images show a polygonal workspace and the bottom six images show a disk-shaped workspace.
-}
-\end{figure*}
-
-%\subsection{Position Control of Two Robots}
-\begin{figure}
-\centering
-\begin{overpic}[width=0.49\columnwidth]{middlegoalnum.pdf}\put(0,75){a)}\end{overpic}
-\begin{overpic}[width=0.49\columnwidth]{middlegoaldist.pdf}\put(0,75){b)}\end{overpic}
-\begin{overpic}[width=0.49\columnwidth]{worstnum.pdf}\put(0,75){c)}\end{overpic}
-\begin{overpic}[width=0.49\columnwidth]{worstdist.pdf}\put(0,75){d)}\end{overpic}
-\caption{\label{fig:contour}
-Plots show performance with one goal on the boundary.
-}
-\end{figure}
-
-\begin{figure}
-\centering
-%\begin{overpic}[width=\columnwidth]{deltanum.pdf}\end{overpic}\\
+%
+%\section{Simulation}\label{sec:simulation}
+%
+%
+%%Two simulations were implemented using non-slip contact walls for position control.  The first controls the position of two robots, the second controls the position of $n$ robots.  
+%\begin{figure*}
+%\begin{overpic}[width=0.3\columnwidth]{regionMove1.pdf}\put(55.5,26){\begin{turn}{94} 
+%{\begin{tikzpicture}[thick]
+%\draw [red,  - , dotted      ] (1,14.0) -- (0,14.0);
+%\end{tikzpicture}}\end{turn}}\end{overpic}
+%\begin{overpic}[width=0.3\columnwidth]{regionMove2.pdf}\put(55.5,26){\begin{turn}{94} 
+%{\begin{tikzpicture}[thick]
+%\draw [red,   -  , dotted     ] (1,14.0) -- (0,14.0);
+%\end{tikzpicture}}\end{turn}}\end{overpic}
+%\begin{overpic}[width=0.3\columnwidth]{regionMove3.pdf}\put(55.5,26){\begin{turn}{94} 
+%{\begin{tikzpicture}[thick]
+%\draw [red,   -   , dotted     ] (1,14.0) -- (0,14.0);
+%\end{tikzpicture}}\end{turn}}\end{overpic}\\
+%
+%\begin{overpic}[width=0.3\columnwidth]{regionMove4.pdf}\put(55.5,26){\begin{turn}{94} 
+%{\begin{tikzpicture}[thick]
+%\draw [red,   -  , dotted      ] (1,14.0) -- (0,14.0);
+%\end{tikzpicture}}\end{turn}}\end{overpic}
+%\begin{overpic}[width=0.3\columnwidth]{regionMove5.pdf}\put(55.5,26){\begin{turn}{94} 
+%{\begin{tikzpicture}[thick]
+%\draw [red,   -   , dotted     ] (1,14.0) -- (0,14.0);
+%\end{tikzpicture}}\end{turn}}\end{overpic}
+%\begin{overpic}[width=0.3\columnwidth]{regionMove6.pdf}\end{overpic}\\
+%
+%\begin{overpic}[width=0.3\columnwidth]{Move1.pdf}\put(55.5,32.5){\begin{turn}{50.5} 
+%{\begin{tikzpicture}[thick]
+%\draw [red,   -   , dotted    ] (1,14.0) -- (0,14.0);
+%\end{tikzpicture}}\end{turn}}\end{overpic}
+%\begin{overpic}[width=0.3\columnwidth]{Move2.pdf}\put(55.5,32.5){\begin{turn}{50.5} 
+%{\begin{tikzpicture}[thick]
+%\draw [red,   -   , dotted     ] (1,14.0) -- (0,14.0);
+%\end{tikzpicture}}\end{turn}}\end{overpic}
+%\begin{overpic}[width=0.3\columnwidth]{Move3.pdf}\put(55.5,32.5){\begin{turn}{50.5} 
+%{\begin{tikzpicture}[thick]
+%\draw [red,   -   , dotted    ] (1,14.0) -- (0,14.0);
+%\end{tikzpicture}}\end{turn}}\end{overpic}\\
+%
+%\begin{overpic}[width=0.3\columnwidth]{Move4.pdf}\put(55.5,32.5){\begin{turn}{50.5} 
+%{\begin{tikzpicture}[thick]
+%\draw [red,   -  , dotted      ] (1,14.0) -- (0,14.0);
+%\end{tikzpicture}}\end{turn}}\end{overpic}
+%\begin{overpic}[width=0.3\columnwidth]{Move5.pdf}\put(55.5,32.5){\begin{turn}{50.5} 
+%{\begin{tikzpicture}[thick]
+%\draw [red,   -   , dotted     ] (1,14.0) -- (0,14.0);
+%\end{tikzpicture}}\end{turn}}\end{overpic}
+%\begin{overpic}[width=0.3\columnwidth]{finalMove.pdf}\end{overpic}
+%\caption{\label{fig:reachableSet}
+%Frames from reconfiguring two particles. 
+%Top six images show a polygonal workspace and the bottom six images show a disk-shaped workspace.
+%}
+%\end{figure*}
+%
+%%\subsection{Position Control of Two Robots}
+%\begin{figure}
+%\centering
+%\begin{overpic}[width=0.49\columnwidth]{middlegoalnum.pdf}\put(0,75){a)}\end{overpic}
+%\begin{overpic}[width=0.49\columnwidth]{middlegoaldist.pdf}\put(0,75){b)}\end{overpic}
+%\begin{overpic}[width=0.49\columnwidth]{worstnum.pdf}\put(0,75){c)}\end{overpic}
+%\begin{overpic}[width=0.49\columnwidth]{worstdist.pdf}\put(0,75){d)}\end{overpic}
+%\caption{\label{fig:contour}
+%Plots show performance with one goal on the boundary.
+%}
+%\end{figure}
+%
+%\begin{figure}
+%\centering
+%%\begin{overpic}[width=\columnwidth]{deltanum.pdf}\end{overpic}\\
+%%\vspace{1em}
+%\begin{overpic}[width=\columnwidth]{deltadist.pdf}\end{overpic}
+%\vspace{-1em}
+%\caption{\label{fig:deltanumdist}
+%The worst-case path length occurs when particles must swap antipodes. This can never be achieved but can be asymptotically approached. Plot shows decreasing error as the number of moves grows.
+%} 
+%\end{figure}
+%
+%
+%\begin{figure}
+%\centering
+%\renewcommand{\figwid}{1\columnwidth}
+%{
+%\begin{overpic}[width =\figwid]{contourDistnew.png}\put(-2,10){\begin{turn}{90} \tiny{unique particles}
+%\end{turn}}
+%
+%\end{overpic}
 %\vspace{1em}
-\begin{overpic}[width=\columnwidth]{deltadist.pdf}\end{overpic}
-\vspace{-1em}
-\caption{\label{fig:deltanumdist}
-The worst-case path length occurs when particles must swap antipodes. This can never be achieved but can be asymptotically approached. Plot shows decreasing error as the number of moves grows.
-} 
-\end{figure}
-
-
-\begin{figure}
-\centering
-\renewcommand{\figwid}{1\columnwidth}
-{
-\begin{overpic}[width =\figwid]{contourDistnew.png}\put(-2,10){\begin{turn}{90} \tiny{unique particles}
-\end{turn}}
-
-\end{overpic}
-\vspace{1em}
-\begin{overpic}[width =\figwid]{JustSimulationV6.png}\put(-2,10){\begin{turn}{90} \tiny{unique particles}
-\end{turn}}
-
-\end{overpic}
-\begin{overpic}[width =\figwid]{identical.png}\put(-2,6){\begin{turn}{90} \tiny{interchangeable particles}
-\end{turn}}
-\end{overpic}
-}\caption{\label{fig:contourPlots}{Starting positions of particles $1$ and $2$ and goal position of particle $2$ are fixed, and $\epsilon=0.001$.
- The top row of contour plots show the distance if particle $1$'s goal position is varied in $x$ and $y$. The middle row shows the number of moves required for the same configurations. The bottom row shows the same configuration but when the particles are interchangeable.}
-\vspace{-1em}
-}
-\end{figure}
-The algorithm developed based on the theory was implemented in Mathematica using particles with zero radius. Figure \ref{fig:reachableSet} shows frames of the algorithm in two representative workspaces, square and disk, with two arbitrary starting and goal configurations.
-%An online interactive demonstration and source code of the algorithm are available at \cite{Shahrokhi2015mathematicaParticle}.
-%  Fig.~\ref{fig:shapeControlMathematica1}  shows  an implementation of this algorithm with robot initial positions represented by hollow squares and final positions by circles. 
- %Dashed lines show the shortest route if robots could be controlled independently, while solid lines show the optimal shortest  path using uniform inputs.
- 
- The contour plots in Fig.~\ref{fig:contour} left show the length of the path for two different settings. Top row considers \{$s_1,s_2,g_1$\} = \{$(0.2,0.2),(-0.1,-0.1),(0,0)$\} and bottom row considers  \{$s_1,s_2,g_1$\} = \{$(0.2,0.2),(-0.1,-0.1),(-0.2,0)$\} each in a workspace with $r= 0.5$, and $g_2$ ranging over all the workspace. Fig.~\ref{fig:contour} right shows the number of moves and left shows the total distance of the path. This plot shows the nonlinear nature of the path planning. When the goal is in the middle of the workspace, a symmetry in the path length is expected as the top row shows. The bottom row shows a shift in the goal position which breaks the symmetry of the path length in the workspace.
- 
-%The path length grows when the goals have $\pi$ difference and are very close to the boundary. 
- The worst-case occurs when the ending points are at antipodes along the boundary ($\pi$ angular distance). This can never be achieved but can be asymptotically approached as shown in Fig.~\ref{fig:deltanumdist}. 
- Figure \ref{fig:contourPlots} shows the same concepts in a square workspace. Figure \ref{fig:contourPlots} top and middle row considers the particles for three arbitrary starting and goal positions for the particles. 
- Thus far, this paper has considered the particles to be unique. If particles are interchangeable, the path lengths often decrease. The bottom row of  Fig.~\ref{fig:contourPlots} considers interchangeable particles with the same configuration as the middle row with unique particles. The worst-case path lengths decrease by 33\%, 60\%, and 30\% for the three test cases shown. 
+%\begin{overpic}[width =\figwid]{JustSimulationV6.png}\put(-2,10){\begin{turn}{90} \tiny{unique particles}
+%\end{turn}}
+%
+%\end{overpic}
+%\begin{overpic}[width =\figwid]{identical.png}\put(-2,6){\begin{turn}{90} \tiny{interchangeable particles}
+%\end{turn}}
+%\end{overpic}
+%}\caption{\label{fig:contourPlots}{Starting positions of particles $1$ and $2$ and goal position of particle $2$ are fixed, and $\epsilon=0.001$.
+% The top row of contour plots show the distance if particle $1$'s goal position is varied in $x$ and $y$. The middle row shows the number of moves required for the same configurations. The bottom row shows the same configuration but when the particles are interchangeable.}
+%\vspace{-1em}
+%}
+%\end{figure}
+%The algorithm developed based on the theory was implemented in Mathematica using particles with zero radius. Figure \ref{fig:reachableSet} shows frames of the algorithm in two representative workspaces, square and disk, with two arbitrary starting and goal configurations.
+%%An online interactive demonstration and source code of the algorithm are available at \cite{Shahrokhi2015mathematicaParticle}.
+%%  Fig.~\ref{fig:shapeControlMathematica1}  shows  an implementation of this algorithm with robot initial positions represented by hollow squares and final positions by circles. 
+% %Dashed lines show the shortest route if robots could be controlled independently, while solid lines show the optimal shortest  path using uniform inputs.
+% 
+% The contour plots in Fig.~\ref{fig:contour} left show the length of the path for two different settings. Top row considers \{$s_1,s_2,g_1$\} = \{$(0.2,0.2),(-0.1,-0.1),(0,0)$\} and bottom row considers  \{$s_1,s_2,g_1$\} = \{$(0.2,0.2),(-0.1,-0.1),(-0.2,0)$\} each in a workspace with $r= 0.5$, and $g_2$ ranging over all the workspace. Fig.~\ref{fig:contour} right shows the number of moves and left shows the total distance of the path. This plot shows the nonlinear nature of the path planning. When the goal is in the middle of the workspace, a symmetry in the path length is expected as the top row shows. The bottom row shows a shift in the goal position which breaks the symmetry of the path length in the workspace.
+% 
+%%The path length grows when the goals have $\pi$ difference and are very close to the boundary. 
+% The worst-case occurs when the ending points are at antipodes along the boundary ($\pi$ angular distance). This can never be achieved but can be asymptotically approached as shown in Fig.~\ref{fig:deltanumdist}. 
+% Figure \ref{fig:contourPlots} shows the same concepts in a square workspace. Figure \ref{fig:contourPlots} top and middle row considers the particles for three arbitrary starting and goal positions for the particles. 
+% Thus far, this paper has considered the particles to be unique. If particles are interchangeable, the path lengths often decrease. The bottom row of  Fig.~\ref{fig:contourPlots} considers interchangeable particles with the same configuration as the middle row with unique particles. The worst-case path lengths decrease by 33\%, 60\%, and 30\% for the three test cases shown. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Experimental Results}\label{sec:expResults}
